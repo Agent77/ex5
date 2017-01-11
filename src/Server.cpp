@@ -59,13 +59,12 @@ int main(int argc, char* argv[]) {
     // RUNS SWITCH CASE
     server.run();
 
-    //CLOSES SOCKETS
-    server.closeSockets();
     return 0;
 }
 
 Server::Server() {
     timeClock = Clock();
+    assisted=false;
 }
 
 /***********************************************************************
@@ -328,15 +327,8 @@ void Server::assignVehicleToClient() {
 void Server::run() {
     int run = 1;
     char action1;
-    int driverId;
     string input;
     string s;
-    const int insertDriver = 1;
-    const int insertTrip = 2;
-    const int insertVehicle = 3;
-    const int requestDriverId = 4;
-    const int moveDrivers = 9;
-    const int close = 7;
 
 //Actions the user can perform
     while (run) {
@@ -350,17 +342,12 @@ void Server::run() {
                 //creating the threads given clients
                 int num=stoi(input);
                 int result = socket->initialize(num);
-
-                /*// ASSIGNS A VEHICLE TO CLIENT ONLY IF TRIP TIME ARRIVES
-                Server::receiveDriver();
-                Server::assignVehicleToClient();*/
                 break;
             }
             case 2: {
                 cin >> input;
                 Trip t = city.createTrip(input);
                 tc.addTrip(t);
-                threadCommand=2;
                 break;
             }
             case 3: {
@@ -368,26 +355,51 @@ void Server::run() {
                 Taxi t = city.createTaxi(s);
                 tc.addTaxi(t);
                 vehicles.push_back(t);
-                threadCommand=3;
                 break;
             }
             case 4: {
-                cin >> driverId;
-                tc.requestDriverLocation(driverId);
+                threadCommand=4;
                 break;
             }
             case 9:
                 // ADVANCE TIME
                 timeClock.increaseTime();
-                Server::SendTripToClient();
-                Server::sendNextLocation();
+                threadCommand=9;
                 break;
             case 7:
-                Server::sendCommand(7);
-                run = 0;
+                threadCommand=7;
+                //CLOSES SOCKETS
+                socket->exitThreads();
+                Server::closeSockets();
                 break;
             default:
                 break;
+        }
+    }
+}
+
+void Server::threadsActions(){
+    int driverId;
+    while (true){
+        if (!assisted){
+            switch(threadCommand){
+                case 1:
+                    // ASSIGNS A VEHICLE TO CLIENT ONLY IF TRIP TIME ARRIVES
+                    Server::receiveDriver();
+                    Server::assignVehicleToClient();
+                    break;
+                case 4:
+                    cin >> driverId;
+                    tc.requestDriverLocation(driverId);
+                    break;
+                case 9:
+                    Server::SendTripToClient();
+                    Server::sendNextLocation();
+                    break;
+                case 7:
+                    Server::sendCommand(7);
+            }
+            assisted=true;
         }
     }
 }
