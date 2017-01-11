@@ -29,6 +29,8 @@
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
 #include "sockets/Tcp.h"
+TaxiCenter tc;
+Server server;
 
 using namespace std;
 /***********************************************************************
@@ -38,7 +40,8 @@ using namespace std;
 	* The Function operation: calls neccessary functions to run server *
 	***********************************************************************/
 int main(int argc, char* argv[]) {
-
+    pthread_t mainThread;
+    int status = pthread_create(&mainThread,)
     Server server = Server();
 
     // INITIALIZES MAP/GRID
