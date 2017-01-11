@@ -31,6 +31,14 @@
 #include "sockets/Tcp.h"
 
 using namespace std;
+int threadCommand; //global variable for sub threads to check to know next action
+City city;
+TaxiCenter tc;
+Clock timeClock;
+vector<Driver> waitingDrivers;
+vector<Taxi> vehicles;
+Graph* g;
+
 /***********************************************************************
 	* function name: main										       *
 	* The Input: port number										   *
@@ -57,7 +65,7 @@ int main(int argc, char* argv[]) {
 }
 
 Server::Server() {
-    clock = Clock();
+    timeClock = Clock();
 }
 
 /***********************************************************************
@@ -126,12 +134,12 @@ void Server::SendTripToClient() {
     Trip trip;
 
     //Finds how many trips start at the current time
-    int numOfTrips=tc.checkTripTimes(clock.getTime());
+    int numOfTrips=tc.checkTripTimes(timeClock.getTime());
 
     // SEND TRIP TO EACH CLIENT
     for (int i = 0; i < numOfTrips; i++) {
         //gets trip that starts at current time
-        trip  = tc.getNextTrip(clock.getTime());
+        trip  = tc.getNextTrip(timeClock.getTime());
         //gets next driver
         Driver d =  waitingDrivers.front();
         //erases from temporary vector of drivers without trips
@@ -168,8 +176,8 @@ int Server::createClients(string port) {
     socket = new Tcp(1, portNum);
 
     //creates new socket for single client
-    int result = socket->initialize();
-    cout<<"RESULT: "<<result<<endl;
+    /*int result = socket->initialize();
+    cout<<"RESULT: "<<result<<endl;*/
 
 }
 
@@ -242,7 +250,7 @@ void Server::sendNextLocation() {
     int y = 0;
     if(tc.getDrivers().size() > 0) {
         //Drives all drivers and sends next locations to clients
-        for(int i=0; i<tc.getDrivers().size() && tc.getDrivers()[i].getTrip()->getTripTime()<clock.getTime(); i++) {
+        for(int i=0; i<tc.getDrivers().size() && tc.getDrivers()[i].getTrip()->getTripTime()<timeClock.getTime(); i++) {
             Trip t = tc.getDrivers()[i].drive();
             tc.updateDriverTrip(t, i);
             x = t.getStartX();
@@ -338,15 +346,21 @@ void Server::run() {
             case 1: //Insert Driver
             {
                 cin >> input; //how many drivers
-                // ASSIGNS A VEHICLE TO CLIENT ONLY IF TRIP TIME ARRIVES
+                threadCommand=1;
+                //creating the threads given clients
+                int num=stoi(input);
+                int result = socket->initialize(num);
+
+                /*// ASSIGNS A VEHICLE TO CLIENT ONLY IF TRIP TIME ARRIVES
                 Server::receiveDriver();
-                Server::assignVehicleToClient();
+                Server::assignVehicleToClient();*/
                 break;
             }
             case 2: {
                 cin >> input;
                 Trip t = city.createTrip(input);
                 tc.addTrip(t);
+                threadCommand=2;
                 break;
             }
             case 3: {
@@ -354,6 +368,7 @@ void Server::run() {
                 Taxi t = city.createTaxi(s);
                 tc.addTaxi(t);
                 vehicles.push_back(t);
+                threadCommand=3;
                 break;
             }
             case 4: {
@@ -363,7 +378,7 @@ void Server::run() {
             }
             case 9:
                 // ADVANCE TIME
-                clock.increaseTime();
+                timeClock.increaseTime();
                 Server::SendTripToClient();
                 Server::sendNextLocation();
                 break;

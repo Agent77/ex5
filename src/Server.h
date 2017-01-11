@@ -25,13 +25,9 @@ class Server {
 
 private:
     Socket* socket;
-    City city;
-    TaxiCenter tc;
-    Clock clock;
-    vector<Driver> waitingDrivers;
-    vector<Taxi> vehicles;
     int portNum;
-    Graph* g;
+    bool assisted;
+
 public:
     Server();
     /***********************************************************************
