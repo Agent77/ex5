@@ -17,7 +17,6 @@ Tcp::Tcp(bool isServers, int port_num) {
     this->descriptorCommunicateClient = 0;
     this->port_number = port_num;
     this->isServer = isServers;
-
 }
 
 /***********************************************************************
@@ -68,12 +67,17 @@ int Tcp::initialize() {
         unsigned int addr_len = sizeof(client_sin);
         this->descriptorCommunicateClient = accept(this->socketDescriptor,
                                                    (struct sockaddr *) &client_sin, &addr_len);
+        cout << "PORT: "<< client_sin.sin_port << endl;
+
         if (this->descriptorCommunicateClient < 0) {
             //return an error represent error at this method
             return ERROR_ACCEPT;
         }
+
         //if client
     } else {
+        cout << "PORT: "<< port_number << endl;
+
         struct sockaddr_in sin;
         memset(&sin, 0, sizeof(sin));
         sin.sin_family = AF_INET;
@@ -82,11 +86,14 @@ int Tcp::initialize() {
         if (connect(this->socketDescriptor,
                     (struct sockaddr *) &sin, sizeof(sin)) < 0) {
             //return an error represent error at this method
+            cout << "CONNECT? "<< ERROR_CONNECT;
             return ERROR_CONNECT;
         }
+        cout << "PORT: "<< port_number << endl;
+
     }
     //return correct if there were no problem
-    return CORRECT;
+    return descriptorCommunicateClient;
 }
 
 /***********************************************************************
@@ -97,7 +104,7 @@ int Tcp::initialize() {
 * and the socket descroptor											   *
 ***********************************************************************/
 int Tcp::sendData(string data) {
-    int data_len = data.length();
+    int data_len = data.length()+1;
     const char * datas = data.c_str();
     int sent_bytes = send(this->isServer ? this->descriptorCommunicateClient
                                          : this->socketDescriptor, datas, data_len, 0);

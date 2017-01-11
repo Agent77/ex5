@@ -1,8 +1,8 @@
 #include "sockets/Tcp.h"
-#include "sockets/Socket.h"
 #include "Driver.h"
 #include "DriverClient.h"
 #include "LuxuryCab.h"
+#include "sockets/Tcp.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -52,6 +52,7 @@ DriverClient::DriverClient() {
 	***********************************************************************/
 void DriverClient::receiveTrip() {
     char buffer[1024];
+    cout<<"BEFORE GET TRIP"<<endl;
     // RECEIVE TRIP FROM SERVER
     client->reciveData(buffer, sizeof(buffer));
     string tripString = createString(buffer, sizeof(buffer));
@@ -63,6 +64,8 @@ void DriverClient::receiveTrip() {
 
     // GIVE DRIVER THE TRIP
     driver.setTrip(*trip);
+    cout<<"AFTER GET TRIP"<<endl;
+    cout<<"DRIVER'S TRIP: "<<driver.getTrip()->getId()<<endl;
     delete trip;
     DriverClient::receiveCommand();
 }
@@ -120,6 +123,7 @@ void DriverClient::receiveNextPoint() {
     char buffer[1024];
     Trip newTrip;
     //RECEIVE POINT
+    cout<<"BEFORE GETTING NP"<<endl;
     client->reciveData(buffer, sizeof(buffer));
     Point* p;
     string nextLocation = createString(buffer, sizeof(buffer));
@@ -131,6 +135,8 @@ void DriverClient::receiveNextPoint() {
     tripP->updateStartPoint(p);
     driver.getTrip()->updateStartPoint(p);
     delete p;
+    cout<<"NEW START X: "<<driver.getTrip()->getStartX()<<endl;
+    cout<<"NEW START Y: "<<driver.getTrip()->getStartY()<<endl;
     DriverClient::receiveCommand();
 }
 
@@ -146,7 +152,7 @@ void DriverClient::openSocket(Driver *driverSent, string currentIp, string port)
     driver = *driverSent;
     portNum=stoi(port);
     client = new Tcp(0,portNum);
-   // client->setIP(currentIp);
+    client->setIP(currentIp);
     int result = client->initialize();
 
     char buffer[1024];

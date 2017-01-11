@@ -28,8 +28,7 @@
 #include <boost/iostreams/stream.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
-#include "../src/sockets/Udp.h"
-#include "../src/sockets/Tcp.h"
+#include "sockets/Tcp.h"
 
 using namespace std;
 /***********************************************************************
@@ -45,7 +44,7 @@ int main(int argc, char* argv[]) {
     // INITIALIZES MAP/GRID
     server.initialize();
 
-    string s = argv[1];
+    string s= argv[1];
     // OPENS SOCKET FOR ONE CLIENT
     server.createClients(s);
 
@@ -148,8 +147,11 @@ void Server::SendTripToClient() {
         oa << trip1;
         s.flush();
         //Notifies client that they are going to receive a trip now
+        cout<<"BEFORE SENDING TRIP COMMAND"<<endl;
         Server::sendCommand(2);
+        cout<<"BEFORE SENDING TRIP"<<endl;
         socket->sendData(serializedTrip);
+        cout<<"AFTER SENDING TRIP"<<endl;
     }
 }
 
@@ -167,6 +169,7 @@ int Server::createClients(string port) {
 
     //creates new socket for single client
     int result = socket->initialize();
+    cout<<"RESULT: "<<result<<endl;
 
 }
 
@@ -253,7 +256,9 @@ void Server::sendNextLocation() {
             oa << ptrPoint;
             s1.flush();
             //notifies clients they are about to receive a new location
+            cout<<"BEFORE SENDING NP COMMAND"<<endl;
             Server::sendCommand(9);
+            cout<<"BEFORE SENDING NP"<<endl;
             socket->sendData(nextLocation);
             delete ptrPoint;
             //need to assign driver a new trip
@@ -278,17 +283,19 @@ void Server::sendNextLocation() {
 void Server::assignVehicleToClient() {
     int counter = 0;
     vector<Taxi>::iterator taxiIter = vehicles.begin();
+    int len = vehicles.size();
     int id = waitingDrivers.front().getDriverId();
 
     // FINDS CORRECT TAXI FOR DRIVER ID
-    while ((*(taxiIter)).getId()!= id && taxiIter!= vehicles.end()){
+    while (counter<len && vehicles[counter].getId()!= id){
         taxiIter++;
         counter++;
     }
     //sets taxi to driver with matching id, who still doesnt have a trip
-    waitingDrivers.front().setTaxi((*taxiIter));
+    Taxi t = vehicles[counter];
+    waitingDrivers[counter].setTaxi(t);
 
-    Taxi* taxiPointer = &(*(taxiIter));
+    Taxi* taxiPointer = &(vehicles[counter]);
     // SERIALIZATION OF TAXI
     std::string serial_str;
     boost::iostreams::back_insert_device<std::string> inserter(serial_str);
