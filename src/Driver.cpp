@@ -37,9 +37,10 @@ Driver::Driver(int driverId, int age, char mStatus, int exp, int vehicleId) {
 * using its grid, the driver uses a bfs algorithms to
 * continue travelling until it arrives at its destination.
 */
-Trip Driver::drive() {
+void* Driver::drive(void* v) {
     int moves = 0;
     BFS bfs = BFS(gps);
+    vector<Coordinate*> path;
     while (moves < taxi.getType()) {
         Coordinate *start;
         int x = myTrip.getStartX();
@@ -51,6 +52,7 @@ Trip Driver::drive() {
         end = new Point(x, y);
         Coordinate *c;
         c = bfs.getNextInPath(start, end);
+        path.push_back(c);
         Trip *newTrip = new Trip(myTrip.getId(), c->getCoordinates()[0], c->getCoordinates()[1], myTrip.getEndX(),
                                  myTrip.getEndY(), myTrip.getNumOfPassengers(), myTrip.getTariff(), myTrip.getTripTime());
         //myTrip->updateStartPoint(c);
@@ -62,6 +64,7 @@ Trip Driver::drive() {
         gps->resetGraph();
         moves ++;
     }
+    myTrip.setPath(path);
     return myTrip;
 }
 
@@ -98,6 +101,8 @@ void Driver::setTaxi(Taxi t) {
 }
 
 void Driver::setTrip(Trip t) {
+    pthread_t tripCalculator;
+    pthread_create(&tripCalculator, NULL, drive, &myTrip);
     myTrip =  Trip(t);
 
 }

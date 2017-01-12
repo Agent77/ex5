@@ -36,7 +36,9 @@ Trip::Trip(Trip* t) {
    this-> yStart = t->getStartY();
    this->yEnd = t->getEndY();
     this->startTime = t->getTripTime();
+}
 
+void calculateTrip() {
 
 }
 
@@ -96,4 +98,8 @@ void Trip::updateStartPoint(Point p){
 
 int Trip::getTripTime() {
     return startTime;
+}
+
+void Trip::setPath(vector<Coordinate *> p) {
+    path = p;
 }

@@ -32,6 +32,7 @@ private:
     int metersPassed;
     double tariff;
     int startTime;
+    vector<Coordinate*> path;
 
 public:
     Trip();
@@ -51,6 +52,7 @@ public:
     int getStartY();
     int getEndX();
     int getEndY();
+    void setPath(vector<Coordinate*> p);
 
 };
 

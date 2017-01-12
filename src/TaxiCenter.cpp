@@ -36,6 +36,8 @@ Driver TaxiCenter::findClosestDriver(Trip t) {
 }
 
 void TaxiCenter::addDriver(Driver d) {
+    pthread_t pathCreator;
+    pthread_create(&pathCreator, NULL, d.drive, NULL);
     drivers.push_back(d);
 
 }
@@ -171,6 +173,7 @@ vector<Trip> TaxiCenter::getTrips() {
 
 
 void TaxiCenter::addTrip(Trip t) {
+
     trips.push_back(t);
 }
 

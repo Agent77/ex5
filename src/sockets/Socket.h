@@ -63,7 +63,7 @@ public:
 	* The Function operation: initialize the Socket object and getting a   *
 	* socket descriptor. pure virtual method							   *
 	***********************************************************************/
-	virtual int initialize() = 0;
+	virtual int initialize(int num) = 0;
 	/***********************************************************************
 	* function name: sendData											   *
 	* The Input: string representing the data to send		               *
@@ -82,8 +82,7 @@ public:
 	virtual int reciveData(char* buffer, int size) = 0;
 	//virtual int getPortNum() = 0;
 	virtual void setIP(string ip)=0;
-
-
+    virtual void setSocket(int socket) = 0;
 
 
 };

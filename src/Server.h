@@ -14,6 +14,7 @@
 #include "TaxiCenter.h"
 #include "../src/sockets/Socket.h"
 #include "Clock.h"
+#include "clientDetails.h"
 
 using namespace std;
 using namespace boost::archive;
@@ -27,6 +28,7 @@ private:
     Socket* socket;
     int portNum;
     bool assisted;
+    Driver* myDriver;
 
 public:
     Server();
@@ -37,7 +39,7 @@ public:
 	* The Function operation: contains switch case which runs the main
     * flow of the input and client/server interactions                     *
 	***********************************************************************/
-    void run();
+    static void* run(void* v);
     /***********************************************************************
 	* function name: initialize											   *
 	* The Input: none													   *
@@ -110,7 +112,13 @@ public:
 	***********************************************************************/
     void closeSockets();
 
-    void threadsActions();
+    void assistClient(clientDetails c);
+
+};
+
+
+#endif //EX2_GAMEFLOW_H
+
 
 };
 

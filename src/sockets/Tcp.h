@@ -7,9 +7,11 @@
 #define TCP_H_
 
 #include "Socket.h"
+#include "../clientDetails.h"
 
 class Tcp: public Socket {
 private:
+    vector<pthread_t*> threads;
     int descriptorCommunicateClient;
 public:
     /***********************************************************************
@@ -33,7 +35,7 @@ public:
 	* The Function operation: initialize the Socket object and getting a   *
 	* socket descriptor.												   *
 	***********************************************************************/
-    int initialize();
+    int initialize(int clientAmount);
     /***********************************************************************
     * function name: sendData											   *
     * The Input: string representing the data to send		               *
@@ -50,7 +52,13 @@ public:
     * the data															   *
     ***********************************************************************/
     int reciveData(char* buffer, int size);
-     void setIP(string ip);
+    void setIP(string ip);
+    void* runThread(void* client);
+    void exitThreads();
+    void setSocket(int socket) {
+        descriptorCommunicateClient = socket;
+    };
+
 
 };
 
