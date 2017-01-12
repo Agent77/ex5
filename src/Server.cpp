@@ -282,6 +282,7 @@ void Server::SendTripToClient() {
         tc.addDriver(*myDriver);
         Trip* trip1 = &trip;
         //SERIALIZATION OF TRIP
+        //acasa
         boost::iostreams::back_insert_device<std::string> inserter(serializedTrip);
         boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
         boost::archive::binary_oarchive oa(s);
