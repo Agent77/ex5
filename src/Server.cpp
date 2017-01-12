@@ -295,7 +295,7 @@ void Server::SendTripToClient() {
         cout<<"BEFORE SENDING TRIP COMMAND"<<endl;
         Server::sendCommand(2);
         cout<<"BEFORE SENDING TRIP"<<endl;
-        tcp->sendData(serializedTrip);
+        tcp->sendData(serializedTrip, client.socketId);
         cout<<"AFTER SENDING TRIP"<<endl;
     }
 }
@@ -324,7 +324,7 @@ void Server::receiveDriver() {
 
     // RECEIVE DRIVER FROM CLIENT
     char buffer[1024];
-    tcp->reciveData(buffer, sizeof(buffer));
+    tcp->reciveData(buffer, sizeof(buffer), client.socketId);
 
     // DESERIALIZE BUFFER INTO DRIVER
     string s = createString(buffer, sizeof(buffer));
@@ -356,7 +356,7 @@ void Server::sendCommand(int command) {
     boost::archive::binary_oarchive oa(s1);
     oa << command;
     s1.flush();
-    socket->sendData(commandString);
+    socket->sendData(commandString, client.socketId);
 }
 
 /***********************************************************************
