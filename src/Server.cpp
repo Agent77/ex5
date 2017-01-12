@@ -150,6 +150,7 @@ static void* Server::run(void* v) {
                 break;
             case 7:
                 threadCommand = 7;
+                run = false;
                 //CLOSES SOCKETS
                 //socket->exitThreads();
                 //Server::closeSockets();
@@ -162,15 +163,15 @@ static void* Server::run(void* v) {
 }
 
 void Server::assistClient(clientDetails client){
-    tcp->setSocket(client.socketId); //TODO SEND ID TO SENDDATA
-    //myDriver = client.driver;
+    //tcp->setSocket(clientSocket); //TODO SEND ID TO SENDDATA
+    myDriver = client.driver;
     int driverId;
     while (true) {
         if(allClientsAssisted == 0) {
             assisted = false;
         }
-        if (!assisted){
-            switch(threadCommand){
+        if (!assisted) {
+            switch(threadCommand) {
                 case 1:
                     // ASSIGNS A VEHICLE TO CLIENT ONLY IF TRIP TIME ARRIVES
                     Server::receiveDriver();
@@ -270,17 +271,12 @@ void Server::SendTripToClient() {
     //Finds how many trips start at the current time
     int numOfTrips=tc.checkTripTimes(timeClock.getTime());
 
-    // SEND TRIP TO EACH CLIENT
+    // SEND TRIP TO CLIENT
     for (int i = 0; i < numOfTrips; i++) {
         //gets trip that starts at current time
         pthread_mutex_lock(&mutex);
         trip  = tc.getNextTrip(timeClock.getTime());
         pthread_mutex_unlock(&mutex);
-        //gets next driver
-
-        //Driver d =  waitingDrivers.front();
-        //erases from temporary vector of drivers without trips
-        //waitingDrivers.erase(waitingDrivers.begin());
         myDriver->setTrip(&trip);
         myDriver->setMap(tc.getMap());
         tc.addDriver(*myDriver);
@@ -295,7 +291,7 @@ void Server::SendTripToClient() {
         cout<<"BEFORE SENDING TRIP COMMAND"<<endl;
         Server::sendCommand(2);
         cout<<"BEFORE SENDING TRIP"<<endl;
-        tcp->sendData(serializedTrip, client.socketId);
+        tcp->sendData(serializedTrip, clientSocket);
         cout<<"AFTER SENDING TRIP"<<endl;
     }
 }
@@ -324,7 +320,7 @@ void Server::receiveDriver() {
 
     // RECEIVE DRIVER FROM CLIENT
     char buffer[1024];
-    tcp->reciveData(buffer, sizeof(buffer), client.socketId);
+    tcp->reciveData(buffer, sizeof(buffer), clientSocket);
 
     // DESERIALIZE BUFFER INTO DRIVER
     string s = createString(buffer, sizeof(buffer));
@@ -356,7 +352,7 @@ void Server::sendCommand(int command) {
     boost::archive::binary_oarchive oa(s1);
     oa << command;
     s1.flush();
-    socket->sendData(commandString, client.socketId);
+    tcp->sendData(commandString, clientSocket);
 }
 
 /***********************************************************************
@@ -390,7 +386,7 @@ void Server::sendNextLocation() {
             cout<<"BEFORE SENDING NP COMMAND"<<endl;
             Server::sendCommand(9);
             cout<<"BEFORE SENDING NP"<<endl;
-            tcp->sendData(nextLocation, client.socketId);
+            tcp->sendData(nextLocation, clientSocket);
             delete ptrPoint;
             //need to assign driver a new trip
             if(myDriver->arrived()) {
@@ -402,7 +398,7 @@ void Server::sendNextLocation() {
             }
        // }
     }
-}
+
 
 /***********************************************************************
 	* function name: assignVehicleToClient												   *
@@ -435,7 +431,7 @@ void Server::assignVehicleToClient() {
     oa << taxiPointer;
     s1.flush();
     // RETURN TAXI TO CLIENT
-    socket->sendData(serial_str, client.socketId);
+    tcp->sendData(serial_str, clientSocket);
     //once taxi has been assigned to a driver, it can be deleted from vehicle vector
     vehicles.erase(vehicles.begin() + counter);
 

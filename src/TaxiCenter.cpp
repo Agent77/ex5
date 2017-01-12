@@ -173,7 +173,6 @@ vector<Trip> TaxiCenter::getTrips() {
 
 
 void TaxiCenter::addTrip(Trip t) {
-
     trips.push_back(t);
 }
 

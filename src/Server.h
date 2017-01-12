@@ -25,11 +25,11 @@ using namespace boost::archive;
 class Server {
 
 private:
-    Socket* socket;
+    int clientSocket;
     int portNum;
     bool assisted;
     Driver* myDriver;
-    clientDetails client;
+    //clientDetails client;
 
 public:
     Server();

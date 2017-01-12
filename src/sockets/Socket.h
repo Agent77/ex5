@@ -81,7 +81,7 @@ public:
 	***********************************************************************/
 	virtual int reciveData(char* buffer, int size, int port) = 0;
 	//virtual int getPortNum() = 0;
-	virtual void setIP(string ip)=0;
+	virtual void setIP(string ip) = 0;
     virtual void setSocket(int socket) = 0;
 
 
