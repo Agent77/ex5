@@ -109,7 +109,8 @@ int Tcp::initialize(int clients) {
 * The Function operation: sending the required data, using his length  *
 * and the socket descroptor											   *
 ***********************************************************************/
-int Tcp::sendData(string data) {
+int Tcp::sendData(string data, int port) {
+    descriptorCommunicateClient = port;
     int data_len = data.length()+1;
     const char * datas = data.c_str();
     int sent_bytes = send(this->isServer ? this->descriptorCommunicateClient
@@ -129,7 +130,8 @@ int Tcp::sendData(string data) {
 * The Function operation: getting data from the other socket to,	   *
 * enter it to the buffer and print the data							   *
 ***********************************************************************/
-int Tcp::reciveData(char* buffer, int size) {
+int Tcp::reciveData(char* buffer, int size, int port) {
+    descriptorCommunicateClient = port;
     int read_bytes = recv(this->isServer ? this->descriptorCommunicateClient
                                          : this->socketDescriptor, buffer, size, 0);
     //checking the errors

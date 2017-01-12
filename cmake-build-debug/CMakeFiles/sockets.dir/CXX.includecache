@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Socket.cpp
+Socket.h
+/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Socket.h
+unistd.h
+-
+
+/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Socket.h
+sys/socket.h
+-
+netinet/in.h
+-
+arpa/inet.h
+-
+cstring
+-
+iostream
+-
+string
+-
+
+/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Tcp.cpp
+Tcp.h
+/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Tcp.h
+
+/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Tcp.h
+Socket.h
+/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Socket.h
+

@@ -53,6 +53,7 @@ public:
     int getEndX();
     int getEndY();
     void setPath(vector<Coordinate*> p);
+    Point* getNextInPath();
 
 };
 

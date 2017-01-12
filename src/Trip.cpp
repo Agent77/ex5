@@ -103,3 +103,9 @@ int Trip::getTripTime() {
 void Trip::setPath(vector<Coordinate *> p) {
     path = p;
 }
+
+Point* Trip::getNextInPath() {
+    Point* p = (Point*)path.front();
+    path.erase(path.begin());
+    return p;
+}

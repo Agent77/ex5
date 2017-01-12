@@ -31,6 +31,8 @@
 #include "sockets/Tcp.h"
 
 using namespace std;
+
+pthread_mutex_t mutex;
 int threadCommand; //global variable for sub threads to check to know next action
 City city;
 TaxiCenter tc;
@@ -271,12 +273,14 @@ void Server::SendTripToClient() {
     // SEND TRIP TO EACH CLIENT
     for (int i = 0; i < numOfTrips; i++) {
         //gets trip that starts at current time
+        pthread_mutex_lock(&mutex);
         trip  = tc.getNextTrip(timeClock.getTime());
+        pthread_mutex_unlock(&mutex);
         //gets next driver
 
         //Driver d =  waitingDrivers.front();
         //erases from temporary vector of drivers without trips
-        waitingDrivers.erase(waitingDrivers.begin());
+        //waitingDrivers.erase(waitingDrivers.begin());
         myDriver->setTrip(&trip);
         myDriver->setMap(tc.getMap());
         tc.addDriver(*myDriver);
@@ -330,7 +334,7 @@ void Server::receiveDriver() {
     boost::archive::binary_iarchive ia(s2);
     ia >> receivedDriver;
     //adds received driver to temp vector of drivers, until it is assigned a trip
-    waitingDrivers.push_back(*receivedDriver);
+    //waitingDrivers.push_back(*receivedDriver);
     myDriver = receivedDriver;
     //delete receivedDriver;
 }
@@ -366,15 +370,15 @@ void Server::sendNextLocation() {
 
     int x = 0;
     int y = 0;
-    if(tc.getDrivers().size() > 0) {
+    //if(tc.getDrivers().size() > 0) {
         //Drives all drivers and sends next locations to clients
-        for(int i=0; i<tc.getDrivers().size() && tc.getDrivers()[i].getTrip()->getTripTime()<timeClock.getTime(); i++) {
+        //for(int i=0; i<tc.getDrivers().size() && tc.getDrivers()[i].getTrip()->getTripTime()<timeClock.getTime(); i++) {
             //Trip t = tc.getDrivers()[i].drive();
            // tc.updateDriverTrip(t, i);
            // x = t.getStartX();
            // y = t.getStartY();
 
-            Point* ptrPoint =  myDriver->getTrip().getNextInPath();
+            Point* ptrPoint =  myDriver->getTrip()->getNextInPath();
 
             std::string nextLocation;
             boost::iostreams::back_insert_device<std::string> inserter(nextLocation);
@@ -386,7 +390,7 @@ void Server::sendNextLocation() {
             cout<<"BEFORE SENDING NP COMMAND"<<endl;
             Server::sendCommand(9);
             cout<<"BEFORE SENDING NP"<<endl;
-            tcp->sendData(nextLocation);
+            tcp->sendData(nextLocation, client.socketId);
             delete ptrPoint;
             //need to assign driver a new trip
             if(myDriver->arrived()) {
@@ -396,7 +400,7 @@ void Server::sendNextLocation() {
                 //tc.deleteDriver(i);
                 Server::SendTripToClient(); //TODO MUTEX
             }
-        }
+       // }
     }
 }
 
@@ -411,10 +415,10 @@ void Server::assignVehicleToClient() {
     int counter = 0;
     vector<Taxi>::iterator taxiIter = vehicles.begin();
     int len = vehicles.size();
-    int id = waitingDrivers.front().getDriverId();
+    //int id = waitingDrivers.front().getDriverId();
 
     // FINDS CORRECT TAXI FOR DRIVER ID
-    while (counter<len && vehicles[counter].getId()!= id){
+    while (counter<len && vehicles[counter].getId()!= myDriver->getDriverId()){
         taxiIter++;
         counter++;
     }
@@ -431,7 +435,7 @@ void Server::assignVehicleToClient() {
     oa << taxiPointer;
     s1.flush();
     // RETURN TAXI TO CLIENT
-    socket->sendData(serial_str);
+    socket->sendData(serial_str, client.socketId);
     //once taxi has been assigned to a driver, it can be deleted from vehicle vector
     vehicles.erase(vehicles.begin() + counter);
 

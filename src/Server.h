@@ -29,6 +29,7 @@ private:
     int portNum;
     bool assisted;
     Driver* myDriver;
+    clientDetails client;
 
 public:
     Server();

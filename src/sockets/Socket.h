@@ -71,7 +71,7 @@ public:
 	* The Function operation: sending the input data to the socket         *
 	* who connect to this socket. pure virtual method					   *
 	***********************************************************************/
-	virtual int sendData(string data) = 0;
+	virtual int sendData(string data, int port) = 0;
 	/***********************************************************************
 	* function name: recive	`											   *
 	* The Input: none										               *
@@ -79,7 +79,7 @@ public:
 	* The Function operation: getting data from the other socket and print *
 	* the data															   *
 	***********************************************************************/
-	virtual int reciveData(char* buffer, int size) = 0;
+	virtual int reciveData(char* buffer, int size, int port) = 0;
 	//virtual int getPortNum() = 0;
 	virtual void setIP(string ip)=0;
     virtual void setSocket(int socket) = 0;

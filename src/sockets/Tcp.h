@@ -43,7 +43,7 @@ public:
     * The Function operation: sending the input data to the socket         *
     * who connect to this socket. 										   *
     ***********************************************************************/
-    int sendData(string data);
+    int sendData(string data, int port);
     /***********************************************************************
     * function name: recive	`											   *
     * The Input: none										               *
@@ -51,7 +51,7 @@ public:
     * The Function operation: getting data from the other socket and print *
     * the data															   *
     ***********************************************************************/
-    int reciveData(char* buffer, int size);
+    int reciveData(char* buffer, int size, int port);
     void setIP(string ip);
     void* runThread(void* client);
     void exitThreads();
