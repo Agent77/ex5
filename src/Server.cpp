@@ -29,10 +29,20 @@
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
 #include "sockets/Tcp.h"
-TaxiCenter tc;
-Server server;
 
 using namespace std;
+int threadCommand; //global variable for sub threads to check to know next action
+City city;
+TaxiCenter tc;
+Clock timeClock;
+vector<Driver> waitingDrivers;
+vector<Taxi> vehicles;
+Graph* g;
+Socket* tcp;
+int allClientsAssisted;
+int numOfClients;
+void* createMainSocket(string port);
+
 /***********************************************************************
 	* function name: main										       *
 	* The Input: port number										   *
@@ -40,9 +50,15 @@ using namespace std;
 	* The Function operation: calls neccessary functions to run server *
 	***********************************************************************/
 int main(int argc, char* argv[]) {
+    Server s = Server();
+    s.initialize();
+
     pthread_t mainThread;
-    int status = pthread_create(&mainThread,)
-    Server server = Server();
+
+    // MAIN THREAD CREATION
+    int status = pthread_create(&mainThread, NULL, createMainSocket, (void*)argv[1]);
+
+/*
 
     // INITIALIZES MAP/GRID
     server.initialize();
@@ -54,13 +70,134 @@ int main(int argc, char* argv[]) {
     // RUNS SWITCH CASE
     server.run();
 
-    //CLOSES SOCKETS
-    server.closeSockets();
-    return 0;
+    return 0;*/
 }
 
+
+/***********************************************************************
+	* function name: createClients										   *
+	* The Input: string of port number													   *
+	* The output: none										               *
+	* The Function operation: opens a socket for the client to reach	   *
+	***********************************************************************/
+void* createMainSocket(void* port) {
+    string* s = (string*)port;
+    int portNum = stoi(*s);
+
+    // creates tcp for connection
+    tcp = new Tcp(1, portNum);
+
+    //creates all the threads
+    //tcp->initialize();
+    pthread_t mainRun;
+    pthread_create(&mainRun, NULL, Server::run, NULL);
+
+
+}
+
+
+/***********************************************************************
+   * function name: run												   *
+   * The Input: none												   *
+   * The output: none										           *
+   * The Function operation: contains switch case which runs the main
+   * flow of the input and client/server interactions                  *
+   ********************************************************************/
+static void* Server::run(void* v) {
+    int run = 1;
+    char action1;
+    string input;
+    string s;
+
+//Actions the user can perform
+    while (run) {
+        cin >> action1;
+        int action = (int)action1 - 48;
+        switch(action) {
+            case 1: //Insert Driver
+            {
+                cin >> input; //how many drivers
+                threadCommand = 1;
+                //creating the threads given clients
+                int num = stoi(input);
+                numOfClients = num;
+                int result = tcp->initialize(num);
+                break;
+            }
+            case 2: {
+                cin >> input;
+                Trip t = city.createTrip(input);
+                tc.addTrip(t);
+                break;
+            }
+            case 3: {
+                cin >> s;
+                Taxi t = city.createTaxi(s);
+                tc.addTaxi(t);
+                vehicles.push_back(t);
+                break;
+            }
+            case 4: {
+                threadCommand = 4;
+                break;
+            }
+            case 9:
+                // ADVANCE TIME
+                timeClock.increaseTime();
+                threadCommand = 9;
+                break;
+            case 7:
+                threadCommand = 7;
+                //CLOSES SOCKETS
+                //socket->exitThreads();
+                //Server::closeSockets();
+                break;
+            default:
+                break;
+        }
+    }
+    pthread_exit(0);
+}
+
+void Server::assistClient(clientDetails client){
+    tcp->setSocket(client.socketId); //TODO SEND ID TO SENDDATA
+    //myDriver = client.driver;
+    int driverId;
+    while (true) {
+        if(allClientsAssisted == 0) {
+            assisted = false;
+        }
+        if (!assisted){
+            switch(threadCommand){
+                case 1:
+                    // ASSIGNS A VEHICLE TO CLIENT ONLY IF TRIP TIME ARRIVES
+                    Server::receiveDriver();
+                    Server::assignVehicleToClient();
+                    break;
+                case 4:
+                    cin >> driverId;
+                    tc.requestDriverLocation(driverId);
+                    break;
+                case 9:
+                    Server::SendTripToClient();
+                    Server::sendNextLocation();
+                    break;
+                case 7:
+                    Server::sendCommand(7);
+                default:
+                    break;
+            }
+            assisted = true;
+            allClientsAssisted += 1;
+            if(allClientsAssisted == numOfClients) {
+                allClientsAssisted = 0;
+            }
+        }
+    }
+}
 Server::Server() {
-    clock = Clock();
+    timeClock = Clock();
+    assisted=false;
 }
 
 /***********************************************************************
@@ -129,19 +266,20 @@ void Server::SendTripToClient() {
     Trip trip;
 
     //Finds how many trips start at the current time
-    int numOfTrips=tc.checkTripTimes(clock.getTime());
+    int numOfTrips=tc.checkTripTimes(timeClock.getTime());
 
     // SEND TRIP TO EACH CLIENT
     for (int i = 0; i < numOfTrips; i++) {
         //gets trip that starts at current time
-        trip  = tc.getNextTrip(clock.getTime());
+        trip  = tc.getNextTrip(timeClock.getTime());
         //gets next driver
-        Driver d =  waitingDrivers.front();
+
+        //Driver d =  waitingDrivers.front();
         //erases from temporary vector of drivers without trips
         waitingDrivers.erase(waitingDrivers.begin());
-        d.setTrip(&trip);
-        d.setMap(tc.getMap());
-        tc.addDriver(d);
+        myDriver->setTrip(&trip);
+        myDriver->setMap(tc.getMap());
+        tc.addDriver(*myDriver);
         Trip* trip1 = &trip;
         //SERIALIZATION OF TRIP
         boost::iostreams::back_insert_device<std::string> inserter(serializedTrip);
@@ -153,28 +291,12 @@ void Server::SendTripToClient() {
         cout<<"BEFORE SENDING TRIP COMMAND"<<endl;
         Server::sendCommand(2);
         cout<<"BEFORE SENDING TRIP"<<endl;
-        socket->sendData(serializedTrip);
+        tcp->sendData(serializedTrip);
         cout<<"AFTER SENDING TRIP"<<endl;
     }
 }
 
-/***********************************************************************
-	* function name: createClients										   *
-	* The Input: string of port number													   *
-	* The output: none										               *
-	* The Function operation: opens a socket for the client to reach	   *
-	***********************************************************************/
-int Server::createClients(string port) {
-    portNum=stoi(port);
 
-    // creates port for clients
-    socket = new Tcp(1, portNum);
-
-    //creates new socket for single client
-    int result = socket->initialize();
-    cout<<"RESULT: "<<result<<endl;
-
-}
 
 /***********************************************************************
 	* function name: createString									       *
@@ -198,7 +320,7 @@ void Server::receiveDriver() {
 
     // RECEIVE DRIVER FROM CLIENT
     char buffer[1024];
-    socket->reciveData(buffer, sizeof(buffer));
+    tcp->reciveData(buffer, sizeof(buffer));
 
     // DESERIALIZE BUFFER INTO DRIVER
     string s = createString(buffer, sizeof(buffer));
@@ -209,7 +331,8 @@ void Server::receiveDriver() {
     ia >> receivedDriver;
     //adds received driver to temp vector of drivers, until it is assigned a trip
     waitingDrivers.push_back(*receivedDriver);
-    delete receivedDriver;
+    myDriver = receivedDriver;
+    //delete receivedDriver;
 }
 
 /***********************************************************************
@@ -245,12 +368,13 @@ void Server::sendNextLocation() {
     int y = 0;
     if(tc.getDrivers().size() > 0) {
         //Drives all drivers and sends next locations to clients
-        for(int i=0; i<tc.getDrivers().size() && tc.getDrivers()[i].getTrip()->getTripTime()<clock.getTime(); i++) {
-            Trip t = tc.getDrivers()[i].drive();
-            tc.updateDriverTrip(t, i);
-            x = t.getStartX();
-            y = t.getStartY();
-            Point* ptrPoint = new Point(x, y);
+        for(int i=0; i<tc.getDrivers().size() && tc.getDrivers()[i].getTrip()->getTripTime()<timeClock.getTime(); i++) {
+            //Trip t = tc.getDrivers()[i].drive();
+           // tc.updateDriverTrip(t, i);
+           // x = t.getStartX();
+           // y = t.getStartY();
+
+            Point* ptrPoint =  myDriver->getTrip().getNextInPath();
 
             std::string nextLocation;
             boost::iostreams::back_insert_device<std::string> inserter(nextLocation);
@@ -262,15 +386,15 @@ void Server::sendNextLocation() {
             cout<<"BEFORE SENDING NP COMMAND"<<endl;
             Server::sendCommand(9);
             cout<<"BEFORE SENDING NP"<<endl;
-            socket->sendData(nextLocation);
+            tcp->sendData(nextLocation);
             delete ptrPoint;
             //need to assign driver a new trip
-            if(tc.getDrivers()[i].arrived()) {
+            if(myDriver->arrived()) {
                 //re-adds driver to waiting drivers
-                waitingDrivers.push_back(tc.getDrivers()[i]);
+                //waitingDrivers.push_back(tc.getDrivers()[i]);
                 //delets drivers without trips from taxi center
-                tc.deleteDriver(i);
-                Server::SendTripToClient();
+                //tc.deleteDriver(i);
+                Server::SendTripToClient(); //TODO MUTEX
             }
         }
     }
@@ -313,69 +437,6 @@ void Server::assignVehicleToClient() {
 
 }
 
-/***********************************************************************
-   * function name: run												   *
-   * The Input: none												   *
-   * The output: none										           *
-   * The Function operation: contains switch case which runs the main
-   * flow of the input and client/server interactions                  *
-   ********************************************************************/
-void Server::run() {
-    int run = 1;
-    char action1;
-    int driverId;
-    string input;
-    string s;
-    const int insertDriver = 1;
-    const int insertTrip = 2;
-    const int insertVehicle = 3;
-    const int requestDriverId = 4;
-    const int moveDrivers = 9;
-    const int close = 7;
 
-//Actions the user can perform
-    while (run) {
-        cin >> action1;
-        int action = (int)action1 - 48;
-        switch(action) {
-            case 1: //Insert Driver
-            {
-                cin >> input; //how many drivers
-                // ASSIGNS A VEHICLE TO CLIENT ONLY IF TRIP TIME ARRIVES
-                Server::receiveDriver();
-                Server::assignVehicleToClient();
-                break;
-            }
-            case 2: {
-                cin >> input;
-                Trip t = city.createTrip(input);
-                tc.addTrip(t);
-                break;
-            }
-            case 3: {
-                cin >> s;
-                Taxi t = city.createTaxi(s);
-                tc.addTaxi(t);
-                vehicles.push_back(t);
-                break;
-            }
-            case 4: {
-                cin >> driverId;
-                tc.requestDriverLocation(driverId);
-                break;
-            }
-            case 9:
-                // ADVANCE TIME
-                clock.increaseTime();
-                Server::SendTripToClient();
-                Server::sendNextLocation();
-                break;
-            case 7:
-                Server::sendCommand(7);
-                run = 0;
-                break;
-            default:
-                break;
-        }
-    }
-}
+
+

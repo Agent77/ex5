@@ -5,6 +5,8 @@
 ************************************************************/
 
 #include "Tcp.h"
+#include "../Server.h"
+#include "../clientDetails.h"
 
 /***********************************************************************
 * function name: Tcp												   *
@@ -36,7 +38,7 @@ Tcp::~Tcp() {
 * The Function operation: initialize the Socket object by getting	   *
 * socket descriptor. bind and accept for servers or connect for clients*
 ***********************************************************************/
-int Tcp::initialize() {
+int Tcp::initialize(int clients) {
     //getting a socket descriptor and check if legal
     this->socketDescriptor = socket(AF_INET, SOCK_STREAM, 0);
     if (this->socketDescriptor < 0) {
@@ -63,17 +65,21 @@ int Tcp::initialize() {
             return ERROR_LISTEN;
         }
         //accept
+        int clientSocket;
         struct sockaddr_in client_sin;
         unsigned int addr_len = sizeof(client_sin);
-        this->descriptorCommunicateClient = accept(this->socketDescriptor,
-                                                   (struct sockaddr *) &client_sin, &addr_len);
-        cout << "PORT: "<< client_sin.sin_port << endl;
-
-        if (this->descriptorCommunicateClient < 0) {
-            //return an error represent error at this method
-            return ERROR_ACCEPT;
-        }
-
+        while((clientSocket = accept(this->socketDescriptor, (struct sockaddr *) &client_sin,
+				&addr_len))!=0) {
+			if (clientSocket > 0) {
+                pthread_t thread;
+                //threads.push_back(&thread);
+				clientDetails client = clientDetails(clientSocket, NULL);
+				if (pthread_create(&thread, NULL, runThread, (void*)&client)
+						< 0) {
+					perror("could not create thread");
+				}
+			}
+		}
         //if client
     } else {
         cout << "PORT: "<< port_number << endl;
@@ -143,4 +149,15 @@ int Tcp::reciveData(char* buffer, int size) {
 
 void Tcp::setIP(string ip) {
     ip_address = ip;
+}
+
+void* Tcp::runThread(void* c) {
+    clientDetails* client = (clientDetails*)c;
+    Server s = Server();
+    s.assistClient(*client);
+    pthread_exit(0);
+}
+
+void Tcp::exitThreads() {
+
 }
