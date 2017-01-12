@@ -37,9 +37,14 @@ Driver TaxiCenter::findClosestDriver(Trip t) {
 
 void TaxiCenter::addDriver(Driver d) {
     pthread_t pathCreator;
-    pthread_create(&pathCreator, NULL, d.drive, NULL);
+    pthread_create(&pathCreator, NULL, move, (void*)&d);
     drivers.push_back(d);
 
+}
+
+void* TaxiCenter::move(void* d) {
+    Driver* driver=(Driver*) d;
+    driver->drive();
 }
 
 
@@ -144,7 +149,7 @@ vector <Driver> TaxiCenter::getDrivers (){
 /*
 * alerts all drivers to move.
 */
-Coordinate* TaxiCenter::driveAll() {
+/*Coordinate* TaxiCenter::driveAll() {
     assignDrivers();
     Trip t;
     vector<Driver>::iterator currentDriver = drivers.begin();
@@ -157,7 +162,7 @@ Coordinate* TaxiCenter::driveAll() {
     Point p = t.getStart();
     Coordinate* c = &p;
     return c;
-}
+}*/
 
 /*
  * adds taxi to vector of taxis
