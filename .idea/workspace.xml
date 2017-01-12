@@ -14,7 +14,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="99afffb0-f7e0-47d3-afc8-b552067f280d" name="Default" comment="testing branches" />
+    <list default="true" id="99afffb0-f7e0-47d3-afc8-b552067f280d" name="Default" comment="testing branches">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Server.cpp" afterPath="$PROJECT_DIR$/src/Server.cpp" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -49,7 +52,7 @@
             <state relative-caret-position="1638">
               <caret line="83" column="36" lean-forward="false" selection-start-line="83" selection-start-column="36" selection-end-line="83" selection-end-column="36" />
               <folding>
-                <marker date="1484243643000" expanded="true" signature="814:3338" ph="{...}" />
+                <marker date="1484243970000" expanded="true" signature="814:3338" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -61,20 +64,19 @@
             <state relative-caret-position="78">
               <caret line="45" column="10" lean-forward="false" selection-start-line="45" selection-start-column="10" selection-end-line="45" selection-end-column="10" />
               <folding>
-                <marker date="1484243643000" expanded="true" signature="2845:2848" ph="{...}" />
+                <marker date="1484243970000" expanded="true" signature="2845:2848" ph="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Server.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Server.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Server.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-525">
-              <caret line="200" column="18" lean-forward="false" selection-start-line="200" selection-start-column="18" selection-end-line="200" selection-end-column="18" />
+            <state relative-caret-position="399">
+              <caret line="284" column="15" lean-forward="false" selection-start-line="284" selection-start-column="15" selection-end-line="284" selection-end-column="15" />
               <folding>
                 <element signature="e#294#313#0" expanded="true" />
-                <element signature="e#529#548#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -84,14 +86,10 @@
         <entry file="file://$PROJECT_DIR$/src/TaxiCenter.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1009">
-              <caret line="174" column="0" lean-forward="false" selection-start-line="174" selection-start-column="0" selection-end-line="174" selection-end-column="0" />
+              <caret line="179" column="0" lean-forward="false" selection-start-line="179" selection-start-column="0" selection-end-line="179" selection-end-column="0" />
               <folding>
                 <element signature="e#94#118#0" expanded="true" />
-                <marker date="1484243643000" expanded="true" signature="669:781" ph="{...}" />
-                <marker date="1484243643000" expanded="true" signature="816:820" ph="{...}" />
-                <marker date="1484243643000" expanded="true" signature="1002:1270" ph="{...}" />
-                <marker date="1484243643000" expanded="true" signature="1519:3285" ph="{...}" />
-                <marker date="1484243643000" expanded="true" signature="3325:3504" ph="/.../" />
+                <marker date="1484244043000" expanded="true" signature="669:737" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -113,7 +111,7 @@
             <state relative-caret-position="492">
               <caret line="110" column="1" lean-forward="false" selection-start-line="110" selection-start-column="1" selection-end-line="110" selection-end-column="1" />
               <folding>
-                <marker date="1484243643000" expanded="true" signature="637:837" ph="{...}" />
+                <marker date="1484243970000" expanded="true" signature="637:837" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -122,8 +120,8 @@
       <file leaf-file-name="Driver.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Driver.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1450">
-              <caret line="106" column="0" lean-forward="false" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
+            <state relative-caret-position="1408">
+              <caret line="104" column="0" lean-forward="false" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -135,18 +133,18 @@
             <state relative-caret-position="483">
               <caret line="59" column="17" lean-forward="false" selection-start-line="59" selection-start-column="17" selection-end-line="59" selection-end-column="17" />
               <folding>
-                <marker date="1484243643000" expanded="true" signature="287:1480" ph="{...}" />
-                <marker date="1484243643000" expanded="true" signature="430:548" ph="{...}" />
-                <marker date="1484243643000" expanded="true" signature="1094:1121" ph="{...}" />
+                <marker date="1484244043000" expanded="true" signature="287:1448" ph="{...}" />
+                <marker date="1484244043000" expanded="true" signature="430:548" ph="{...}" />
+                <marker date="1484244043000" expanded="true" signature="1094:1121" ph="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Trip.h" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Trip.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Trip.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="772">
+            <state relative-caret-position="625">
               <caret line="60" column="19" lean-forward="false" selection-start-line="60" selection-start-column="19" selection-end-line="60" selection-end-column="19" />
               <folding />
             </state>
@@ -188,8 +186,8 @@
         <option value="$PROJECT_DIR$/src/sockets/Socket.h" />
         <option value="$PROJECT_DIR$/src/Server.h" />
         <option value="$PROJECT_DIR$/src/TaxiCenter.cpp" />
-        <option value="$PROJECT_DIR$/src/Server.cpp" />
         <option value="$PROJECT_DIR$/src/Trip.h" />
+        <option value="$PROJECT_DIR$/src/Server.cpp" />
       </list>
     </option>
   </component>
@@ -279,9 +277,11 @@
           <option name="mySupportsDeletion" value="false" />
           <option name="myCanBeAbsent" value="false" />
           <option name="myId" value="UPDATED" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/DriverClient.cpp</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/Server.cpp</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/sockets/Tcp.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/.idea/misc.xml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/Driver.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/Driver.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/TaxiCenter.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/TaxiCenter.h</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
           <option name="myUpdateName" value="Created" />
@@ -584,7 +584,7 @@
       <option name="presentableId" value="Default" />
       <updated>1483982024399</updated>
       <workItem from="1483982028772" duration="36373000" />
-      <workItem from="1484161398556" duration="26260000" />
+      <workItem from="1484161398556" duration="26626000" />
     </task>
     <task id="LOCAL-00001" summary="testing branches">
       <created>1484167741944</created>
@@ -604,7 +604,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="62633000" />
+    <option name="totallyTimeSpent" value="62999000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="42" y="23" width="1219" height="736" extended-state="0" />
@@ -612,12 +612,12 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22969647" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4737631" sideWeight="0.49712878" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27736133" sideWeight="0.509434" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.49625188" sideWeight="0.49384743" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10344828" sideWeight="0.5028712" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.022488756" sideWeight="0.49712878" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5322339" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10344828" sideWeight="0.49712878" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27736133" sideWeight="0.49056605" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27736133" sideWeight="0.48728466" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298351" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -693,7 +693,7 @@
         <state relative-caret-position="777">
           <caret line="37" column="25" lean-forward="false" selection-start-line="37" selection-start-column="25" selection-end-line="37" selection-end-column="25" />
           <folding>
-            <marker date="1484243643000" expanded="true" signature="814:3338" ph="{...}" />
+            <marker date="1484243970000" expanded="true" signature="814:3338" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -703,7 +703,7 @@
         <state relative-caret-position="252">
           <caret line="12" column="36" lean-forward="false" selection-start-line="12" selection-start-column="36" selection-end-line="12" selection-end-column="36" />
           <folding>
-            <marker date="1484243643000" expanded="true" signature="2845:2848" ph="{...}" />
+            <marker date="1484243970000" expanded="true" signature="2845:2848" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -835,20 +835,9 @@
         <state relative-caret-position="483">
           <caret line="59" column="17" lean-forward="false" selection-start-line="59" selection-start-column="17" selection-end-line="59" selection-end-column="17" />
           <folding>
-            <marker date="1484243643000" expanded="true" signature="287:1480" ph="{...}" />
-            <marker date="1484243643000" expanded="true" signature="430:548" ph="{...}" />
-            <marker date="1484243643000" expanded="true" signature="1094:1121" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Server.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-525">
-          <caret line="200" column="18" lean-forward="false" selection-start-line="200" selection-start-column="18" selection-end-line="200" selection-end-column="18" />
-          <folding>
-            <element signature="e#294#313#0" expanded="true" />
-            <element signature="e#529#548#0" expanded="true" />
+            <marker date="1484244043000" expanded="true" signature="287:1448" ph="{...}" />
+            <marker date="1484244043000" expanded="true" signature="430:548" ph="{...}" />
+            <marker date="1484244043000" expanded="true" signature="1094:1121" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -858,7 +847,7 @@
         <state relative-caret-position="1638">
           <caret line="83" column="36" lean-forward="false" selection-start-line="83" selection-start-column="36" selection-end-line="83" selection-end-column="36" />
           <folding>
-            <marker date="1484243643000" expanded="true" signature="814:3338" ph="{...}" />
+            <marker date="1484243970000" expanded="true" signature="814:3338" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -878,7 +867,7 @@
         <state relative-caret-position="78">
           <caret line="45" column="10" lean-forward="false" selection-start-line="45" selection-start-column="10" selection-end-line="45" selection-end-column="10" />
           <folding>
-            <marker date="1484243643000" expanded="true" signature="2845:2848" ph="{...}" />
+            <marker date="1484243970000" expanded="true" signature="2845:2848" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -896,15 +885,15 @@
         <state relative-caret-position="492">
           <caret line="110" column="1" lean-forward="false" selection-start-line="110" selection-start-column="1" selection-end-line="110" selection-end-column="1" />
           <folding>
-            <marker date="1484243643000" expanded="true" signature="637:837" ph="{...}" />
+            <marker date="1484243970000" expanded="true" signature="637:837" ph="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Driver.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1450">
-          <caret line="106" column="0" lean-forward="false" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
+        <state relative-caret-position="1408">
+          <caret line="104" column="0" lean-forward="false" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -912,23 +901,29 @@
     <entry file="file://$PROJECT_DIR$/src/TaxiCenter.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1009">
-          <caret line="174" column="0" lean-forward="false" selection-start-line="174" selection-start-column="0" selection-end-line="174" selection-end-column="0" />
+          <caret line="179" column="0" lean-forward="false" selection-start-line="179" selection-start-column="0" selection-end-line="179" selection-end-column="0" />
           <folding>
             <element signature="e#94#118#0" expanded="true" />
-            <marker date="1484243643000" expanded="true" signature="669:781" ph="{...}" />
-            <marker date="1484243643000" expanded="true" signature="816:820" ph="{...}" />
-            <marker date="1484243643000" expanded="true" signature="1002:1270" ph="{...}" />
-            <marker date="1484243643000" expanded="true" signature="1519:3285" ph="{...}" />
-            <marker date="1484243643000" expanded="true" signature="3325:3504" ph="/.../" />
+            <marker date="1484244043000" expanded="true" signature="669:737" ph="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Trip.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="772">
+        <state relative-caret-position="625">
           <caret line="60" column="19" lean-forward="false" selection-start-line="60" selection-start-column="19" selection-end-line="60" selection-end-column="19" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Server.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="284" column="15" lean-forward="false" selection-start-line="284" selection-start-column="15" selection-end-line="284" selection-end-column="15" />
+          <folding>
+            <element signature="e#294#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
