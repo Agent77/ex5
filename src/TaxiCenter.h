@@ -67,6 +67,7 @@ public:
     void assignTrip(Trip t);
     void resetDrivers(vector<Driver> d);
     void deleteDriver(int i);
+    static void* move(void* d);
 };
 
 

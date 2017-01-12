@@ -57,10 +57,9 @@ public:
     void setTrip(Trip t);
     void rateMe(int rating);
     void addPassenger(Passenger p);
-    void* drive(void* v);
+    void drive();
     bool arrived();
     void setMap(Graph* map);
-    void needNewTrip();
 };
 
 #endif //EX2_DRIVER_H

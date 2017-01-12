@@ -37,7 +37,7 @@ Driver::Driver(int driverId, int age, char mStatus, int exp, int vehicleId) {
 * using its grid, the driver uses a bfs algorithms to
 * continue travelling until it arrives at its destination.
 */
-void* Driver::drive(void* v) {
+void Driver::drive() {
     int moves = 0;
     BFS bfs = BFS(gps);
     vector<Coordinate*> path;
@@ -65,7 +65,7 @@ void* Driver::drive(void* v) {
         moves ++;
     }
     myTrip.setPath(path);
-    return myTrip;
+
 }
 
 int Driver::getAge() {
@@ -101,8 +101,6 @@ void Driver::setTaxi(Taxi t) {
 }
 
 void Driver::setTrip(Trip t) {
-    pthread_t tripCalculator;
-    pthread_create(&tripCalculator, NULL, drive, &myTrip);
     myTrip =  Trip(t);
 
 }
@@ -145,8 +143,4 @@ bool Driver::arrived() {
  */
 void Driver::setMap(Graph* map) {
     gps = map;
-}
-
-void Driver::needNewTrip() {
-    //myTrip = new Trip();
 }
