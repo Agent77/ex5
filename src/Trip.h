@@ -33,7 +33,7 @@ private:
     double tariff;
     int startTime;
     vector<Coordinate*> path;
-
+//sdf
 public:
     Trip();
     Trip(int tripId, int xStart, int yStart, int xEnd, int yEnd, int numOfPassengers, double tariff, int time);

@@ -94,7 +94,7 @@ void Trip::addMeters() {
 void Trip::updateStartPoint(Point p){
     xStart = p.getCoordinates()[0];
     yStart = p.getCoordinates()[1];
-}
+}//sdf
 
 int Trip::getTripTime() {
     return startTime;
