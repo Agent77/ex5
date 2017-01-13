@@ -31,7 +31,8 @@
 #include "sockets/Tcp.h"
 
 using namespace std;
-
+static void* assist(void* s);
+static void* acceptClients(void* v);
 pthread_mutex_t mutex;
 int threadCommand; //global variable for sub threads to check to know next action
 City city;
@@ -55,10 +56,21 @@ int main(int argc, char* argv[]) {
     Server s = Server();
     s.initialize();
 
-    pthread_t mainThread;
+    //pthread_t mainThread;
 
     // MAIN THREAD CREATION
-    int status = pthread_create(&mainThread, NULL, createMainSocket, (void*)argv[1]);
+   // int status = pthread_create(&mainThread, NULL, createMainSocket, (void*)argv[1]);
+    //string* s = (string*)port;
+    int portNum = stoi(argv[1]);
+
+    // creates tcp for connection
+    tcp = new Tcp(1, portNum);
+
+    //creates all the threads
+    //tcp->initialize();
+    pthread_t mainRun;
+    pthread_create(&mainRun, NULL, acceptClients, (void*)1);
+    pthread_join(mainRun,(void**)1);
 
 /*
 
@@ -92,7 +104,8 @@ void* createMainSocket(void* port) {
     //creates all the threads
     //tcp->initialize();
     pthread_t mainRun;
-    pthread_create(&mainRun, NULL, Server::run, NULL);
+    pthread_create(&mainRun, NULL, acceptClients, NULL);
+    //pthread_join(mainRun,(void**)1);
 
 
 }
@@ -105,14 +118,18 @@ void* createMainSocket(void* port) {
    * The Function operation: contains switch case which runs the main
    * flow of the input and client/server interactions                  *
    ********************************************************************/
-static void* Server::run(void* v) {
-    int run = 1;
+static void* acceptClients(void* dummy) {
+    cout << "** ACCEPT CLIENTS **"<< endl;
+    //Server* server = (Server*)s;
+    bool run = true;
     char action1;
     string input;
     string s;
 
 //Actions the user can perform
     while (run) {
+        cout << "** IN WHILE OF ACCEPT CLIENTS **"<<endl;
+
         cin >> action1;
         int action = (int)action1 - 48;
         switch(action) {
@@ -123,7 +140,16 @@ static void* Server::run(void* v) {
                 //creating the threads given clients
                 int num = stoi(input);
                 numOfClients = num;
-                int result = tcp->initialize(num);
+                int* clientSockets = tcp->initialize(num);
+                int i;
+                for(i = 0; i < numOfClients; i++) {
+                    cout<< "** IN LOOP TO CREATE THREADS ** "<<endl;
+                    pthread_t* thread = new pthread_t();
+                    Server tempServer = Server();
+                    tempServer.setSocket(clientSockets[i]);
+                    pthread_create(thread, NULL, assist, (void*)&tempServer);
+                    pthread_join(*thread, (void**)1);
+                }
                 break;
             }
             case 2: {
@@ -162,35 +188,41 @@ static void* Server::run(void* v) {
     pthread_exit(0);
 }
 
-void Server::assistClient(clientDetails client){
-    //tcp->setSocket(clientSocket); //TODO SEND ID TO SENDDATA
-    myDriver = client.driver;
+ void* assist(void* s) {
+     cout << "** ASSIST **"<<endl;
+     bool run = true;
+    Server* server = (Server*)s;
     int driverId;
-    while (true) {
+     tcp->sendData("EYOO!", server->socketNum());
+    while (run) {
+        cout << "** WHILE OF ASSIST **"<<endl;
+
         if(allClientsAssisted == 0) {
-            assisted = false;
+            server->assisted = false;
         }
-        if (!assisted) {
+
+        if (!server->assisted) {
             switch(threadCommand) {
                 case 1:
                     // ASSIGNS A VEHICLE TO CLIENT ONLY IF TRIP TIME ARRIVES
-                    Server::receiveDriver();
-                    Server::assignVehicleToClient();
+                    server->receiveDriver();
+                    server->assignVehicleToClient();
                     break;
                 case 4:
                     cin >> driverId;
                     tc.requestDriverLocation(driverId);
                     break;
                 case 9:
-                    Server::SendTripToClient();
-                    Server::sendNextLocation();
+                    server->SendTripToClient();
+                    server->sendNextLocation();
                     break;
                 case 7:
-                    Server::sendCommand(7);
+                    run = false;
+                    server->sendCommand(7);
                 default:
                     break;
             }
-            assisted = true;
+            server->assisted = true;
             allClientsAssisted += 1;
             if(allClientsAssisted == numOfClients) {
                 allClientsAssisted = 0;
@@ -198,6 +230,14 @@ void Server::assistClient(clientDetails client){
         }
     }
 }
+
+//void* Server::runThread(void* c) {
+    //clientDetails* client = (clientDetails*)c;
+    //Server s = Server();
+   // assistClient(*client);
+   // pthread_exit(0);
+//}
+
 Server::Server() {
     timeClock = Clock();
     assisted=false;
@@ -217,7 +257,7 @@ void Server::closeSockets() {//TODO NEXT DELETE
     vehicles.swap(vehicles);
     //g->deleteGraph();
     delete g;
-    delete socket;
+//    delete socket;
 }
 
 /**************************************************************************
@@ -274,9 +314,9 @@ void Server::SendTripToClient() {
     // SEND TRIP TO CLIENT
     for (int i = 0; i < numOfTrips; i++) {
         //gets trip that starts at current time
-        pthread_mutex_lock(&mutex);
+//        pthread_mutex_lock(&mutex);
         trip  = tc.getNextTrip(timeClock.getTime());
-        pthread_mutex_unlock(&mutex);
+       // pthread_mutex_unlock(&mutex);
         myDriver->setTrip(&trip);
         myDriver->setMap(tc.getMap());
         tc.addDriver(*myDriver);

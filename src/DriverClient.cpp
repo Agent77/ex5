@@ -54,7 +54,7 @@ void DriverClient::receiveTrip() {
     char buffer[1024];
     cout<<"BEFORE GET TRIP"<<endl;
     // RECEIVE TRIP FROM SERVER
-    client->reciveData(buffer, sizeof(buffer));
+    client->reciveData(buffer, sizeof(buffer) ,0);
     string tripString = createString(buffer, sizeof(buffer));
     Trip* trip = NULL;
     boost::iostreams::basic_array_source<char> device1(tripString.c_str(), tripString.size());
@@ -84,7 +84,7 @@ int DriverClient::receiveCommand() {
     const int newTrip = 2;
     const int close = 7;
     //RECEIVE COMMAND
-    client->reciveData(buffer, sizeof(buffer));
+    client->reciveData(buffer, sizeof(buffer),0);
     string commandString = createString(buffer, sizeof(buffer));
     int command = 0;
     boost::iostreams::basic_array_source<char> device2(commandString.c_str(), commandString.size());
@@ -124,7 +124,7 @@ void DriverClient::receiveNextPoint() {
     Trip newTrip;
     //RECEIVE POINT
     cout<<"BEFORE GETTING NP"<<endl;
-    client->reciveData(buffer, sizeof(buffer));
+    client->reciveData(buffer, sizeof(buffer),0);
     Point* p;
     string nextLocation = createString(buffer, sizeof(buffer));
     boost::iostreams::basic_array_source<char> device3(nextLocation.c_str(), nextLocation.size());
@@ -153,7 +153,7 @@ void DriverClient::openSocket(Driver *driverSent, string currentIp, string port)
     portNum=stoi(port);
     client = new Tcp(0,portNum);
     client->setIP(currentIp);
-    int result = client->initialize();
+    int* result = client->initialize(0);
 
     char buffer[1024];
     // SERIALIZATION
@@ -164,7 +164,7 @@ void DriverClient::openSocket(Driver *driverSent, string currentIp, string port)
     oa << driverSent;
     s.flush();
     // SENDS DRIVER TO SERVER
-    int result1 = client->sendData(serial_str);
+    int result1 = client->sendData(serial_str,0);
 }
 
 /***********************************************************************
@@ -175,20 +175,26 @@ void DriverClient::openSocket(Driver *driverSent, string currentIp, string port)
      * assigns it to its driver                                            *
 	***********************************************************************/
 void DriverClient::receiveVehicle() {
+    cout << "** IN RECEIVE VEHICLE **"<<endl;
     char buffer[1024];
     // GETS TAXI IN RETURN
-    int resultData = client->reciveData(buffer, sizeof(buffer));
-
+    int resultData = client->reciveData(buffer, sizeof(buffer),0);
+    string test = createString(buffer, sizeof(buffer));
+    boost::iostreams::basic_array_source<char> device(test.c_str(), test.size());
+    boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s2(device);
+    boost::archive::binary_iarchive ia(s2);
+    ia >> test;
+    cout << "TESTING SOCKET: "<<test<<endl;
     // DESERIALIZATION
-    string taxiString = createString(buffer, sizeof(buffer));
+    /*string taxiString = createString(buffer, sizeof(buffer));
     Taxi *taxi;
     boost::iostreams::basic_array_source<char> device(taxiString.c_str(), taxiString.size());
     boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s2(device);
     boost::archive::binary_iarchive ia(s2);
-    ia >> taxi;
+    ia >> taxi;*/
     //GIVE DRIVER TAXI
-    driver.setTaxi(*taxi);
-    delete taxi;
+   // driver.setTaxi(*taxi);
+    //delete taxi;
 }
 
 

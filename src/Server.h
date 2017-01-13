@@ -27,11 +27,13 @@ class Server {
 private:
     int clientSocket;
     int portNum;
-    bool assisted;
-    Driver* myDriver;
+
+
     //clientDetails client;
 
 public:
+    Driver* myDriver;
+    bool assisted;
     Server();
     /***********************************************************************
 	* function name: run												   *
@@ -112,14 +114,13 @@ public:
 	* The Function operation: notifies all clients to close themselves     *
 	***********************************************************************/
     void closeSockets();
-
+    void setSocket(int socketNum) {
+    clientSocket = socketNum;
+    };
+    int socketNum() {
+    return clientSocket;}
     void assistClient(clientDetails c);
-
-};
-
-
-#endif //EX2_GAMEFLOW_H
-
+    static void* assist(void* s);
 
 };
 

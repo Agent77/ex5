@@ -35,7 +35,7 @@ public:
 	* The Function operation: initialize the Socket object and getting a   *
 	* socket descriptor.												   *
 	***********************************************************************/
-    int initialize(int clientAmount);
+    int* initialize(int clientAmount);
     /***********************************************************************
     * function name: sendData											   *
     * The Input: string representing the data to send		               *
@@ -53,7 +53,7 @@ public:
     ***********************************************************************/
     int reciveData(char* buffer, int size, int port);
     void setIP(string ip);
-    void* runThread(void* client);
+    static void* runThread(void* client);
     void exitThreads();
     void setSocket(int socket) {
         descriptorCommunicateClient = socket;

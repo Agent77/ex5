@@ -14,6 +14,7 @@
 #include <cstring>
 #include <iostream>
 #include <string>
+#include "../Server.h"
 using namespace std;
 
 //return values to each function if error happened
@@ -63,7 +64,7 @@ public:
 	* The Function operation: initialize the Socket object and getting a   *
 	* socket descriptor. pure virtual method							   *
 	***********************************************************************/
-	virtual int initialize(int num) = 0;
+	virtual int* initialize(int num) = 0;
 	/***********************************************************************
 	* function name: sendData											   *
 	* The Input: string representing the data to send		               *

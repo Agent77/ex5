@@ -38,12 +38,13 @@ Tcp::~Tcp() {
 * The Function operation: initialize the Socket object by getting	   *
 * socket descriptor. bind and accept for servers or connect for clients*
 ***********************************************************************/
-int Tcp::initialize(int clients) {
+int* Tcp::initialize(int c) {
+    int clients[c];
     //getting a socket descriptor and check if legal
     this->socketDescriptor = socket(AF_INET, SOCK_STREAM, 0);
     if (this->socketDescriptor < 0) {
         //return an error represent error at this method
-        return ERROR_SOCKET;
+        //return ERROR_SOCKET;
     }
     //if server
     if (this->isServer) {
@@ -55,24 +56,37 @@ int Tcp::initialize(int clients) {
         sin.sin_port = htons(this->port_number);
         //bind
         if (::bind(this->socketDescriptor,
-                 (struct sockaddr *) &sin, sizeof(sin)) < 0) {
+                   (struct sockaddr *) &sin, sizeof(sin)) < 0) {
             //return an error represent error at this method
-            return ERROR_BIND;
+            //return ERROR_BIND;
         }
         //listen
         if (listen(this->socketDescriptor, this->backLog) < 0) {
             //return an error represent error at this method
-            return ERROR_LISTEN;
+            // return ERROR_LISTEN;
         }
         //accept
         int clientSocket;
         struct sockaddr_in client_sin;
         unsigned int addr_len = sizeof(client_sin);
-        while((clientSocket = accept(this->socketDescriptor, (struct sockaddr *) &client_sin,
-				&addr_len))!=0) {
+        int i = 0;
+        for (i = 0; i < c; i++) {
+            clientSocket = accept(this->socketDescriptor, (struct sockaddr *) &client_sin,
+                                  &addr_len);
+            cout << "SOCKET DESC: "<< clientSocket << endl;
+            clients[i] = clientSocket;
+
+        }
+        return clients;
+    }
+       /* //while((clientSocket = accept(this->socketDescriptor, (struct sockaddr *) &client_sin,
+		//		&addr_len))!=0) {
 			if (clientSocket > 0) {
                 pthread_t thread;
                 //threads.push_back(&thread);
+                //void* (*runThreadPtr)(void*);
+                //runThreadPtr = &runThread;
+                Server s = Server();
 				clientDetails client = clientDetails(clientSocket, NULL);
 				if (pthread_create(&thread, NULL, runThread, (void*)&client)
 						< 0) {
@@ -81,7 +95,8 @@ int Tcp::initialize(int clients) {
 			}
 		}
         //if client
-    } else {
+    }
+        else {
         cout << "PORT: "<< port_number << endl;
 
         struct sockaddr_in sin;
@@ -101,6 +116,7 @@ int Tcp::initialize(int clients) {
     //return correct if there were no problem
     return descriptorCommunicateClient;
 }
+   */     }
 
 /***********************************************************************
 * function name: sendData											   *
@@ -153,11 +169,11 @@ void Tcp::setIP(string ip) {
     ip_address = ip;
 }
 
-void* Tcp::runThread(void* c) {
-    clientDetails* client = (clientDetails*)c;
-    Server s = Server();
-    s.assistClient(*client);
-    pthread_exit(0);
+ void* Tcp::runThread(void* c) {
+    //clientDetails* client = (clientDetails*)c;
+    // Server s = Server();
+    //s.assistClient(*client);
+    //pthread_exit(0);
 }
 
 void Tcp::exitThreads() {
