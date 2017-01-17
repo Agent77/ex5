@@ -48,6 +48,7 @@ public:
     int getExp() {
         return exp;
     };
+    static void* driveNow(void* d);
     double getSatisfaction();
     Taxi getTaxi();
     Trip* getTrip();

@@ -32,10 +32,11 @@ public:
     BFS(){};
     BFS(Graph* g);
     Node* getSource();
-    Node* getDest();void getPath();
+    Node* getDest();
+    void getPath();
     void PrintPath(Node* s, Node* d);
     std::vector<Node*> visitNeighbors(Node* n);
-    Coordinate* getNextInPath(Coordinate* sLoc, Coordinate* dLoc);
+    vector<Coordinate*> getFullPath(Coordinate* sLoc, Coordinate* dLoc);
 
 };
 

@@ -27,7 +27,7 @@ class Server {
 private:
     int clientSocket;
     int portNum;
-
+    pthread_t calc;
 
     //clientDetails client;
 
@@ -121,6 +121,8 @@ public:
     return clientSocket;}
     void assistClient(clientDetails c);
     static void* assist(void* s);
+    void assignTrip(Trip t);
+    void verifyResponse();
 
 };
 

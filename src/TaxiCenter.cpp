@@ -36,15 +36,29 @@ Driver TaxiCenter::findClosestDriver(Trip t) {
 }
 
 void TaxiCenter::addDriver(Driver d) {
-    pthread_t pathCreator;
-    pthread_create(&pathCreator, NULL, move, (void*)&d);
+    //, pthread_t* pathCreator
+    //pthread_create(pathCreator, NULL, move, (void*)d);
     drivers.push_back(d);
 
 }
 
+bool TaxiCenter::hasDriver(int id) {
+    for(int i=0; i<drivers.size();i++) {
+        if(drivers[i].getDriverId()==id){
+            return true;
+        }
+    }
+    return false;
+
+}
+void TaxiCenter::calculatePath(pthread_t* pathCreator, Driver* d) {
+    pthread_create(pathCreator, NULL, move, (void*)d);
+}
+
 void* TaxiCenter::move(void* d) {
-    Driver* driver=(Driver*) d;
+    Driver* driver = (Driver*)d;
     driver->drive();
+    pthread_exit(0);
 }
 
 
@@ -62,13 +76,13 @@ int TaxiCenter::checkDestinations()  {
 */
 
 void TaxiCenter::requestDriverLocation(int driverId){
-    vector<Driver>::iterator iter = drivers.begin();
-    while((*(iter)).getDriverId() != driverId) {
-        iter++;
+    //vector<Driver>::iterator iter = drivers.begin();
+    int i=0;
+    while(drivers[i].getDriverId() != driverId) {
+        i++;
     }
-    Point point = Point((*(iter)).getTrip()->getStartX(),(*(iter)).getTrip()->getStartY());
-    Coordinate* p = &point;
-    cout<<*p<<endl;
+    Coordinate* p = drivers[i].getTrip()->getNextInPath();
+    cout<< *p <<endl;
 
 }
 
@@ -253,6 +267,10 @@ void TaxiCenter::resetDrivers(vector<Driver> ds) {
  * and is waiting to be assigned another one,
  * and is then added back to taxi center
  */
-void TaxiCenter::deleteDriver(int i) {
+void TaxiCenter::deleteDriver(int id) {
+    int i=0;
+    while(drivers[i].getDriverId() != id) {
+        i++;
+    }
     drivers.erase(drivers.begin()+i);
 }

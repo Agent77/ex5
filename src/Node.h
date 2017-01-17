@@ -32,6 +32,7 @@ private:
 public:
     Node* neighbors;
     Node();
+    Node(Node* n);
     ~Node();
     Node(Coordinate* c);
     bool isVisited();

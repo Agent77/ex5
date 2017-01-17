@@ -96,8 +96,11 @@ std::vector<Node*> BFS::visitNeighbors(Node* n) {
  * previous Nodes, and then goes from
  * destination to source to get next place in path.
  */
-Coordinate* BFS::getNextInPath(Coordinate* sLoc, Coordinate* dLoc){
-    graph->getNodes();
+vector<Coordinate*> BFS::getFullPath(Coordinate* sLoc, Coordinate* dLoc){
+//    graph->getNodes();
+    vector<Coordinate*> path;
+
+    vector<Coordinate*> tempPath;
     this->source =  graph->getNode(sLoc);
     this->source->visit();
     this->destination = graph->getNode(dLoc);
@@ -105,10 +108,19 @@ Coordinate* BFS::getNextInPath(Coordinate* sLoc, Coordinate* dLoc){
     Node *node= destination;
     Node* previousNode;
     while (node != source && node->getPrev()!= NULL){
+        tempPath.push_back(node->getMyLocation());
         previousNode = node;
         node = node->getPrev();
     }
-    return previousNode->getMyLocation();
+    int i = 1;
+    Coordinate* p= *(tempPath.end());
+    while(i<= tempPath.size()){
+        Coordinate* p = new Point(*(tempPath.end() - i));
+        path.push_back(p);
+        i++;
+    }
+    //path.push_back(destination->getMyLocation());
+    return path;
 }
 
 /*

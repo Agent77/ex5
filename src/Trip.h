@@ -33,6 +33,7 @@ private:
     double tariff;
     int startTime;
     vector<Coordinate*> path;
+    pthread_t pathCalc;
 //sdf
 public:
     Trip();

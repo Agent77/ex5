@@ -67,7 +67,6 @@ void DriverClient::receiveTrip() {
     cout<<"AFTER GET TRIP"<<endl;
     cout<<"DRIVER'S TRIP: "<<driver.getTrip()->getId()<<endl;
     delete trip;
-    DriverClient::receiveCommand();
 }
 
 /***********************************************************************
@@ -83,22 +82,26 @@ int DriverClient::receiveCommand() {
     const int newPoint = 9;
     const int newTrip = 2;
     const int close = 7;
-    //RECEIVE COMMAND
-    client->reciveData(buffer, sizeof(buffer),0);
-    string commandString = createString(buffer, sizeof(buffer));
     int command = 0;
-    boost::iostreams::basic_array_source<char> device2(commandString.c_str(), commandString.size());
-    boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s4(device2);
-    boost::archive::binary_iarchive ia2(s4);
-    ia2 >> command;
-    if(command == newPoint) {
-        DriverClient::receiveNextPoint();
-    }
-    if(command == newTrip) {
-        DriverClient::receiveTrip();
-    }
-    if(command == close) {
-        DriverClient::closeSocket();
+    while(command!=7) {
+        sendVerification();
+        //RECEIVE COMMAND
+        client->reciveData(buffer, sizeof(buffer), 0);
+        string commandString = createString(buffer, sizeof(buffer));
+        boost::iostreams::basic_array_source<char> device2(commandString.c_str(), commandString.size());
+        boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s4(device2);
+        boost::archive::binary_iarchive ia2(s4);
+        ia2 >> command;
+        sendVerification();
+        if (command == newPoint) {
+            DriverClient::receiveNextPoint();
+        }
+        if (command == newTrip) {
+            DriverClient::receiveTrip();
+        }
+        if (command == close) {
+            DriverClient::closeSocket();
+        }
     }
 }
 
@@ -137,7 +140,6 @@ void DriverClient::receiveNextPoint() {
     delete p;
     cout<<"NEW START X: "<<driver.getTrip()->getStartX()<<endl;
     cout<<"NEW START Y: "<<driver.getTrip()->getStartY()<<endl;
-    DriverClient::receiveCommand();
 }
 
 
@@ -153,9 +155,10 @@ void DriverClient::openSocket(Driver *driverSent, string currentIp, string port)
     portNum=stoi(port);
     client = new Tcp(0,portNum);
     client->setIP(currentIp);
-    int* result = client->initialize(0);
+    int result = client->initialize(0);
 
-    char buffer[1024];
+
+
     // SERIALIZATION
     std::string serial_str;
     boost::iostreams::back_insert_device<std::string> inserter(serial_str);
@@ -165,6 +168,7 @@ void DriverClient::openSocket(Driver *driverSent, string currentIp, string port)
     s.flush();
     // SENDS DRIVER TO SERVER
     int result1 = client->sendData(serial_str,0);
+
 }
 
 /***********************************************************************
@@ -179,22 +183,16 @@ void DriverClient::receiveVehicle() {
     char buffer[1024];
     // GETS TAXI IN RETURN
     int resultData = client->reciveData(buffer, sizeof(buffer),0);
-    string test = createString(buffer, sizeof(buffer));
-    boost::iostreams::basic_array_source<char> device(test.c_str(), test.size());
-    boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s2(device);
-    boost::archive::binary_iarchive ia(s2);
-    ia >> test;
-    cout << "TESTING SOCKET: "<<test<<endl;
     // DESERIALIZATION
-    /*string taxiString = createString(buffer, sizeof(buffer));
+    string taxiString = createString(buffer, sizeof(buffer));
     Taxi *taxi;
     boost::iostreams::basic_array_source<char> device(taxiString.c_str(), taxiString.size());
     boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s2(device);
     boost::archive::binary_iarchive ia(s2);
-    ia >> taxi;*/
+    ia >> taxi;
     //GIVE DRIVER TAXI
-   // driver.setTaxi(*taxi);
-    //delete taxi;
+    driver.setTaxi(*taxi);
+    delete taxi;
 }
 
 
@@ -211,4 +209,16 @@ Driver DriverClient::getDriver() {
 string DriverClient::createString(char* buffer, int bufferSize) {
     std::string str(buffer, bufferSize);
     return str;
+}
+
+void DriverClient::sendVerification() {
+    int verification = 1;
+    // SERIALIZATION OF COMMAND
+    std::string verify;
+    boost::iostreams::back_insert_device<std::string> inserter(verify);
+    boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s1(inserter);
+    boost::archive::binary_oarchive oa(s1);
+    oa << verification;
+    s1.flush();
+    client->sendData(verify, 0);
 }

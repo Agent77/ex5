@@ -56,13 +56,13 @@ public:
     virtual std::vector<Node*> visitNeighbors(Node* n) = 0;
     virtual Node* getDest(){};
     virtual Node* getSource(){};
+    virtual vector<Coordinate*> getFullPath(Coordinate* sLoc, Coordinate* dLoc) = 0;
     /***********************************************************************
 	* function name: getNextInPath										   *
 	* The Input: start and end of path                  	               *
 	* The output: next location for driver              		           *
 	* The Function operation: gets the next point in bfs path			   *
 	***********************************************************************/
-    virtual Coordinate* getNextInPath(Coordinate* sLoc, Coordinate* dLoc) = 0;
 };
 
 

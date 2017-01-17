@@ -10,6 +10,12 @@ Node::Node() {
     obstacle = false;
 }
 
+Node::Node(Node* n) {
+    myLocation = n->myLocation;
+    prev = NULL;
+    visited = n->visited;
+    obstacle = n->obstacle;
+}
 /*
  * The constructor gets a coordinate object, initializes my location member to be with the given
  * info and sets the visited member to false.

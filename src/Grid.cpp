@@ -20,6 +20,23 @@ Grid::Grid(int xSize, int ySize) {
     }
 }
 
+Grid::Grid(Graph* g){
+    this->sizeX = g->getSizeX();
+    this->sizeY = g->getSizeY();
+    //Node** oldNodes = g->getNodes();
+    int i;
+    int j;
+    for (i = 0; i < sizeX; i++) {
+        for (j = 0; j < sizeY; j++) {
+            Coordinate *c= new Point(i,j);
+            Node* n;
+            n = new Node(g->getNode(c));
+            delete c;
+            this->arrayOfPtrsToNodes[i][j] = n;
+        }
+    }
+}
+
 /*
  * function returns a pointer to the previous Node, from which
  * we arrived at our current Node.
@@ -140,7 +157,16 @@ void Grid::resetGraph(){
         }
     }
 }
-void Grid::getNodes() {
-    Node* n = arrayOfPtrsToNodes[2][2];
-    int num = n->getLocation()[0];
+//void Grid::getNodes() {
+  //  Node* n = arrayOfPtrsToNodes[2][2];
+    //int num = n->getLocation()[0];
+//}
+
+int Grid::getSizeX() {
+    return sizeX;
 }
+
+int Grid::getSizeY() {
+    return sizeY;
+}
+

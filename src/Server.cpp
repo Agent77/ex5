@@ -33,7 +33,8 @@
 using namespace std;
 static void* assist(void* s);
 static void* acceptClients(void* v);
-pthread_mutex_t mutex;
+pthread_mutex_t mutex1;
+bool commandCompleted;
 int threadCommand; //global variable for sub threads to check to know next action
 City city;
 TaxiCenter tc;
@@ -129,7 +130,7 @@ static void* acceptClients(void* dummy) {
 //Actions the user can perform
     while (run) {
         cout << "** IN WHILE OF ACCEPT CLIENTS **"<<endl;
-
+        commandCompleted = false;
         cin >> action1;
         int action = (int)action1 - 48;
         switch(action) {
@@ -140,20 +141,21 @@ static void* acceptClients(void* dummy) {
                 //creating the threads given clients
                 int num = stoi(input);
                 numOfClients = num;
-                int* clientSockets = tcp->initialize(num);
+                int clientSockets = tcp->initialize(num);
                 int i;
                 for(i = 0; i < numOfClients; i++) {
                     cout<< "** IN LOOP TO CREATE THREADS ** "<<endl;
                     pthread_t* thread = new pthread_t();
                     Server tempServer = Server();
-                    tempServer.setSocket(clientSockets[i]);
+                    int socket = tcp->acceptClient();
+                    tempServer.setSocket(socket);
                     pthread_create(thread, NULL, assist, (void*)&tempServer);
-                    pthread_join(*thread, (void**)1);
                 }
                 break;
             }
             case 2: {
                 cin >> input;
+                //threadCommand = 2;
                 Trip t = city.createTrip(input);
                 tc.addTrip(t);
                 break;
@@ -166,7 +168,10 @@ static void* acceptClients(void* dummy) {
                 break;
             }
             case 4: {
-                threadCommand = 4;
+              //  threadCommand = 4;
+                int id;
+                cin >> id;
+                tc.requestDriverLocation(id);
                 break;
             }
             case 9:
@@ -184,6 +189,10 @@ static void* acceptClients(void* dummy) {
             default:
                 break;
         }
+        //while(allClientsAssisted < numOfClients) {
+        //    continue;
+        //}
+       // commandCompleted = true;
     }
     pthread_exit(0);
 }
@@ -192,10 +201,10 @@ static void* acceptClients(void* dummy) {
      cout << "** ASSIST **"<<endl;
      bool run = true;
     Server* server = (Server*)s;
-    int driverId;
-     tcp->sendData("EYOO!", server->socketNum());
+    int missionTime =-1;
+     int driverId;
+
     while (run) {
-        cout << "** WHILE OF ASSIST **"<<endl;
 
         if(allClientsAssisted == 0) {
             server->assisted = false;
@@ -205,16 +214,18 @@ static void* acceptClients(void* dummy) {
             switch(threadCommand) {
                 case 1:
                     // ASSIGNS A VEHICLE TO CLIENT ONLY IF TRIP TIME ARRIVES
-                    server->receiveDriver();
-                    server->assignVehicleToClient();
-                    break;
-                case 4:
-                    cin >> driverId;
-                    tc.requestDriverLocation(driverId);
+                    if(missionTime < 0) {
+                        server->receiveDriver();
+                        server->assignVehicleToClient();
+                        missionTime++;
+                    }
                     break;
                 case 9:
-                    server->SendTripToClient();
-                    server->sendNextLocation();
+                    if(missionTime != timeClock.getTime()) {
+                        server->SendTripToClient();
+                        server->sendNextLocation();
+                        missionTime = timeClock.getTime();
+                    }
                     break;
                 case 7:
                     run = false;
@@ -227,6 +238,9 @@ static void* acceptClients(void* dummy) {
             if(allClientsAssisted == numOfClients) {
                 allClientsAssisted = 0;
             }
+           // while(!commandCompleted) {
+             //   continue;
+            //}
         }
     }
 }
@@ -309,20 +323,20 @@ void Server::SendTripToClient() {
     Trip trip;
 
     //Finds how many trips start at the current time
-    int numOfTrips=tc.checkTripTimes(timeClock.getTime());
+    int numOfTrips = tc.checkTripTimes(timeClock.getTime());
 
     // SEND TRIP TO CLIENT
     for (int i = 0; i < numOfTrips; i++) {
         //gets trip that starts at current time
-//        pthread_mutex_lock(&mutex);
+        pthread_mutex_lock(&mutex1);
         trip  = tc.getNextTrip(timeClock.getTime());
-       // pthread_mutex_unlock(&mutex);
+        pthread_mutex_unlock(&mutex1);
         myDriver->setTrip(&trip);
-        myDriver->setMap(tc.getMap());
-        tc.addDriver(*myDriver);
+        Graph *tempMap=tc.getMap();
+        myDriver->setMap(tempMap);
+        tc.calculatePath(&calc, myDriver);
         Trip* trip1 = &trip;
         //SERIALIZATION OF TRIP
-        //acasa
         boost::iostreams::back_insert_device<std::string> inserter(serializedTrip);
         boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
         boost::archive::binary_oarchive oa(s);
@@ -333,6 +347,7 @@ void Server::SendTripToClient() {
         Server::sendCommand(2);
         cout<<"BEFORE SENDING TRIP"<<endl;
         tcp->sendData(serializedTrip, clientSocket);
+        verifyResponse();
         cout<<"AFTER SENDING TRIP"<<endl;
     }
 }
@@ -358,7 +373,6 @@ string Server::createString(char* buffer, int bufferSize) {
      * sent from client and adds it to a vector of temporary drivers       *
 	***********************************************************************/
 void Server::receiveDriver() {
-
     // RECEIVE DRIVER FROM CLIENT
     char buffer[1024];
     tcp->reciveData(buffer, sizeof(buffer), clientSocket);
@@ -394,6 +408,7 @@ void Server::sendCommand(int command) {
     oa << command;
     s1.flush();
     tcp->sendData(commandString, clientSocket);
+    verifyResponse();
 }
 
 /***********************************************************************
@@ -410,35 +425,38 @@ void Server::sendNextLocation() {
     //if(tc.getDrivers().size() > 0) {
         //Drives all drivers and sends next locations to clients
         //for(int i=0; i<tc.getDrivers().size() && tc.getDrivers()[i].getTrip()->getTripTime()<timeClock.getTime(); i++) {
-            //Trip t = tc.getDrivers()[i].drive();
-           // tc.updateDriverTrip(t, i);
-           // x = t.getStartX();
-           // y = t.getStartY();
+    if (myDriver->getTrip()->getTripTime() < timeClock.getTime()) {
+        pthread_join(calc, NULL);
+        if (!tc.hasDriver(myDriver->getDriverId())) {
+            tc.addDriver(*myDriver);
+        }
+        Point *ptrPoint = myDriver->getTrip()->getNextInPath();
 
-            Point* ptrPoint =  myDriver->getTrip()->getNextInPath();
-
-            std::string nextLocation;
-            boost::iostreams::back_insert_device<std::string> inserter(nextLocation);
-            boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s1(inserter);
-            boost::archive::binary_oarchive oa(s1);
-            oa << ptrPoint;
-            s1.flush();
-            //notifies clients they are about to receive a new location
-            cout<<"BEFORE SENDING NP COMMAND"<<endl;
-            Server::sendCommand(9);
-            cout<<"BEFORE SENDING NP"<<endl;
-            tcp->sendData(nextLocation, clientSocket);
-            delete ptrPoint;
-            //need to assign driver a new trip
-            if(myDriver->arrived()) {
-                //re-adds driver to waiting drivers
-                //waitingDrivers.push_back(tc.getDrivers()[i]);
-                //delets drivers without trips from taxi center
-                //tc.deleteDriver(i);
-                Server::SendTripToClient(); //TODO MUTEX
-            }
-       // }
+        std::string nextLocation;
+        boost::iostreams::back_insert_device<std::string> inserter(nextLocation);
+        boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s1(inserter);
+        boost::archive::binary_oarchive oa(s1);
+        oa << ptrPoint;
+        s1.flush();
+        //notifies clients they are about to receive a new location
+        cout << "BEFORE SENDING NP COMMAND" << endl;
+        Server::sendCommand(9);
+        cout << "BEFORE SENDING NP" << endl;
+        tcp->sendData(nextLocation, clientSocket);
+        verifyResponse();
+        delete ptrPoint;
+        //need to assign driver a new trip
+        if (myDriver->arrived()) {
+            //re-adds driver to waiting drivers
+            //waitingDrivers.push_back(tc.getDrivers()[i]);
+            //delets drivers without trips from taxi center
+            //tc.deleteDriver(i);
+            tc.deleteDriver(myDriver->getDriverId());
+            Server::SendTripToClient(); //TODO MUTEX
+        }
     }
+       // }
+}
 
 
 /***********************************************************************
@@ -461,7 +479,6 @@ void Server::assignVehicleToClient() {
     }
     //sets taxi to driver with matching id, who still doesnt have a trip
     Taxi t = vehicles[counter];
-    waitingDrivers[counter].setTaxi(t);
 
     Taxi* taxiPointer = &(vehicles[counter]);
     // SERIALIZATION OF TAXI
@@ -473,11 +490,22 @@ void Server::assignVehicleToClient() {
     s1.flush();
     // RETURN TAXI TO CLIENT
     tcp->sendData(serial_str, clientSocket);
+    verifyResponse();
     //once taxi has been assigned to a driver, it can be deleted from vehicle vector
     vehicles.erase(vehicles.begin() + counter);
 
 }
 
-
+void Server::verifyResponse() {
+    char buffer[1024];
+    int ygjygv = tcp->reciveData(buffer, sizeof(buffer), clientSocket);
+    string commandString = createString(buffer, sizeof(buffer));
+    int command = 0;
+    boost::iostreams::basic_array_source<char> device2(commandString.c_str(), commandString.size());
+    boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s4(device2);
+    boost::archive::binary_iarchive ia2(s4);
+    ia2 >> command;
+    cout << "TESTING SOCKET: "<< command <<endl;
+}
 
 

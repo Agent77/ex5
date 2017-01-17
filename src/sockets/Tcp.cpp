@@ -5,7 +5,6 @@
 ************************************************************/
 
 #include "Tcp.h"
-#include "../Server.h"
 #include "../clientDetails.h"
 
 /***********************************************************************
@@ -38,8 +37,7 @@ Tcp::~Tcp() {
 * The Function operation: initialize the Socket object by getting	   *
 * socket descriptor. bind and accept for servers or connect for clients*
 ***********************************************************************/
-int* Tcp::initialize(int c) {
-    int clients[c];
+int Tcp::initialize(int c) {
     //getting a socket descriptor and check if legal
     this->socketDescriptor = socket(AF_INET, SOCK_STREAM, 0);
     if (this->socketDescriptor < 0) {
@@ -65,19 +63,7 @@ int* Tcp::initialize(int c) {
             //return an error represent error at this method
             // return ERROR_LISTEN;
         }
-        //accept
-        int clientSocket;
-        struct sockaddr_in client_sin;
-        unsigned int addr_len = sizeof(client_sin);
-        int i = 0;
-        for (i = 0; i < c; i++) {
-            clientSocket = accept(this->socketDescriptor, (struct sockaddr *) &client_sin,
-                                  &addr_len);
-            cout << "SOCKET DESC: "<< clientSocket << endl;
-            clients[i] = clientSocket;
 
-        }
-        return clients;
     }
        /* //while((clientSocket = accept(this->socketDescriptor, (struct sockaddr *) &client_sin,
 		//		&addr_len))!=0) {
@@ -93,9 +79,8 @@ int* Tcp::initialize(int c) {
 					perror("could not create thread");
 				}
 			}
-		}
+		}*/
         //if client
-    }
         else {
         cout << "PORT: "<< port_number << endl;
 
@@ -108,16 +93,23 @@ int* Tcp::initialize(int c) {
                     (struct sockaddr *) &sin, sizeof(sin)) < 0) {
             //return an error represent error at this method
             cout << "CONNECT? "<< ERROR_CONNECT;
-            return ERROR_CONNECT;
         }
         cout << "PORT: "<< port_number << endl;
 
     }
     //return correct if there were no problem
-    return descriptorCommunicateClient;
 }
-   */     }
 
+
+int Tcp::acceptClient() {
+    int clientSocket;
+    struct sockaddr_in client_sin;
+    unsigned int addr_len = sizeof(client_sin);
+    clientSocket = accept(this->socketDescriptor, (struct sockaddr *) &client_sin,
+                              &addr_len);
+    return clientSocket;
+
+}
 /***********************************************************************
 * function name: sendData											   *
 * The Input: string data to send									   *
@@ -146,8 +138,8 @@ int Tcp::sendData(string data, int port) {
 * The Function operation: getting data from the other socket to,	   *
 * enter it to the buffer and print the data							   *
 ***********************************************************************/
-int Tcp::reciveData(char* buffer, int size, int port) {
-    descriptorCommunicateClient = port;
+int Tcp::reciveData(char* buffer, int size, int socket) {
+    descriptorCommunicateClient = socket;
     int read_bytes = recv(this->isServer ? this->descriptorCommunicateClient
                                          : this->socketDescriptor, buffer, size, 0);
     //checking the errors

@@ -27,13 +27,15 @@ public:
     Grid(){};
     ~Grid();
     Grid(int sizeX, int sizeY);
+    Grid(Graph* g);
     Node* getLocationOfPrev(Node* n);
     std::vector<Node*> getNeighbors(Node* node);
     Node* getNode(Coordinate* p);
     void deleteGraph();
     void addObstacle(Coordinate* p);
     void resetGraph();
-    void getNodes();
+    int getSizeX();
+    int getSizeY();
 
 };
 #endif //EX1_GRID_H

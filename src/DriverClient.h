@@ -91,6 +91,7 @@ public:
      * assigns it to its driver                                            *
 	***********************************************************************/
     void receiveVehicle();
+    void sendVerification();
 };
 
 

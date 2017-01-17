@@ -35,7 +35,7 @@ public:
 	* The Function operation: initialize the Socket object and getting a   *
 	* socket descriptor.												   *
 	***********************************************************************/
-    int* initialize(int clientAmount);
+    int initialize(int clientAmount);
     /***********************************************************************
     * function name: sendData											   *
     * The Input: string representing the data to send		               *
@@ -58,6 +58,7 @@ public:
     void setSocket(int socket) {
         descriptorCommunicateClient = socket;
     };
+    int acceptClient();
 
 
 };

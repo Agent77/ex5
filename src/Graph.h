@@ -43,8 +43,10 @@ public:
     virtual Node* getNode(Coordinate* p){};
     virtual void addObstacle(Coordinate* p){};
     virtual void resetGraph(){};
-    virtual void getNodes() {};
+    //virtual void getNodes() {};
     virtual void deleteGraph() = 0;
+    virtual int getSizeX()=0;
+    virtual int getSizeY()=0;
 };
 BOOST_SERIALIZATION_ASSUME_ABSTRACT(Graph);
 

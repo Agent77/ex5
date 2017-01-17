@@ -38,36 +38,67 @@ Driver::Driver(int driverId, int age, char mStatus, int exp, int vehicleId) {
 * continue travelling until it arrives at its destination.
 */
 void Driver::drive() {
-    int moves = 0;
-    BFS bfs = BFS(gps);
+    Graph* copyGraph = new Grid(gps);
+    BFS bfs =  BFS(copyGraph);
     vector<Coordinate*> path;
-    while (moves < taxi.getType()) {
-        Coordinate *start;
-        int x = myTrip.getStartX();
-        int y = myTrip.getStartY();
-        start = new Point(x, y);
-        Coordinate *end;
-        x = myTrip.getEndX();
-        y = myTrip.getEndY();
-        end = new Point(x, y);
-        Coordinate *c;
-        c = bfs.getNextInPath(start, end);
-        path.push_back(c);
-        Trip *newTrip = new Trip(myTrip.getId(), c->getCoordinates()[0], c->getCoordinates()[1], myTrip.getEndX(),
-                                 myTrip.getEndY(), myTrip.getNumOfPassengers(), myTrip.getTariff(), myTrip.getTripTime());
-        //myTrip->updateStartPoint(c);
-          delete start;
-        delete end;
+    /*Coordinate *start;
+    Coordinate *end;
+    Coordinate *c;
 
-        myTrip = *newTrip;
-        delete newTrip;
-        gps->resetGraph();
-        moves ++;
-    }
+    do {
+            int x = myTrip.getStartX();
+            int y = myTrip.getStartY();
+            start = new Point(x, y);
+            x = myTrip.getEndX();
+            y = myTrip.getEndY();
+            end = new Point(x, y);
+            //Coordinate *c;
+            if(end->equalTo(start)) {
+                //path.push_back(end);
+                break;
+            }
+            c = bfs.getNextInPath(start, end);
+            if(taxi.getType() == 2) {
+                c = bfs.getNextInPath(c, end);
+            }
+            path.push_back(c);
+            //Trip *newTrip = new Trip(myTrip.getId(), c->getCoordinates()[0], c->getCoordinates()[1], myTrip.getEndX(),
+                //                     myTrip.getEndY(), myTrip.getNumOfPassengers(), myTrip.getTariff(),
+                 //                    myTrip.getTripTime());
+            myTrip.updateStartPoint(c);
+            if(start->equalTo(end)) {
+                delete start;
+                delete end;
+                break;
+            }
+            delete start;
+            delete end;
+            //myTrip = *newTrip;
+           // delete newTrip;
+            //gps->resetGraph();
+        } while (c != NULL);
+*/
+    Coordinate *start;
+    Coordinate *end;
+    int x = myTrip.getStartX();
+    int y = myTrip.getStartY();
+    start = new Point(x, y);
+    x = myTrip.getEndX();
+    y = myTrip.getEndY();
+    end = new Point(x, y);
+    path = bfs.getFullPath(start, end);
     myTrip.setPath(path);
-
+    delete copyGraph;
 }
 
+
+
+
+ void* Driver::driveNow(void* d) {
+    Driver* driver = (Driver*)d;
+     driver->drive();
+     pthread_exit(0);
+}
 int Driver::getAge() {
     return age;
 }
@@ -101,6 +132,7 @@ void Driver::setTaxi(Taxi t) {
 }
 
 void Driver::setTrip(Trip t) {
+
     myTrip =  Trip(t);
 
 }
