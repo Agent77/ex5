@@ -81,7 +81,7 @@ void TaxiCenter::requestDriverLocation(int driverId){
     while(drivers[i].getDriverId() != driverId) {
         i++;
     }
-    Coordinate* p = drivers[i].getTrip()->getNextInPath();
+    Coordinate* p = new Point(drivers[i].getTrip()->getStartX(),drivers[i].getTrip()->getStartY());
     cout<< *p <<endl;
 
 }
@@ -273,4 +273,14 @@ void TaxiCenter::deleteDriver(int id) {
         i++;
     }
     drivers.erase(drivers.begin()+i);
+}
+
+void TaxiCenter::moveDriver(int id) {
+    int i = 0;
+    while(drivers[i].getDriverId() != id) {
+        i++;
+    }
+    Coordinate* c = drivers[i].getTrip()->getNextInPath();
+    drivers[i].getTrip()->updateStartPoint(c);
+
 }

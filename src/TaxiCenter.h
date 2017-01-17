@@ -70,6 +70,7 @@ public:
     static void* move(void* d);
     void calculatePath(pthread_t* pathCreator, Driver* d);
     bool hasDriver(int id);
+    void moveDriver(int id);
 };
 
 

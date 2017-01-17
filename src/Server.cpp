@@ -431,6 +431,7 @@ void Server::sendNextLocation() {
             tc.addDriver(*myDriver);
         }
         Point *ptrPoint = myDriver->getTrip()->getNextInPath();
+        tc.moveDriver(myDriver->getDriverId());
 
         std::string nextLocation;
         boost::iostreams::back_insert_device<std::string> inserter(nextLocation);
@@ -447,10 +448,6 @@ void Server::sendNextLocation() {
         delete ptrPoint;
         //need to assign driver a new trip
         if (myDriver->arrived()) {
-            //re-adds driver to waiting drivers
-            //waitingDrivers.push_back(tc.getDrivers()[i]);
-            //delets drivers without trips from taxi center
-            //tc.deleteDriver(i);
             tc.deleteDriver(myDriver->getDriverId());
             Server::SendTripToClient(); //TODO MUTEX
         }
