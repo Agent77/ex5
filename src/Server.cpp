@@ -239,7 +239,7 @@ static void* acceptClients(void* dummy) {
                 allClientsAssisted = 0;
             }
            // while(!commandCompleted) {
-             //   continue;
+             // sdf  continue;
             //}
         }
     }
