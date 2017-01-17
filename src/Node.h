@@ -2,9 +2,7 @@
 #define EX1_NODE_H
 
 #include <boost/serialization/access.hpp>
-#include "Node.h"
 #include "Point.h"
-#include "Coordinate.h"
 
 /*
  * Node is a class that represents each object on the grid. it has a reference to the node that

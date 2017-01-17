@@ -425,14 +425,14 @@ void Server::sendNextLocation() {
     //if(tc.getDrivers().size() > 0) {
         //Drives all drivers and sends next locations to clients
         //for(int i=0; i<tc.getDrivers().size() && tc.getDrivers()[i].getTrip()->getTripTime()<timeClock.getTime(); i++) {
-    if (myDriver->getTrip()->getTripTime() < timeClock.getTime()) {
+    if (myDriver->getTrip()->getTripTime() < timeClock.getTime() && !myDriver->arrived()) {
         pthread_join(calc, NULL);
         if (!tc.hasDriver(myDriver->getDriverId())) {
             tc.addDriver(*myDriver);
         }
         Point *ptrPoint = myDriver->getTrip()->getNextInPath();
         tc.moveDriver(myDriver->getDriverId());
-
+        myDriver->getTrip()->updateStartPoint(*ptrPoint);
         std::string nextLocation;
         boost::iostreams::back_insert_device<std::string> inserter(nextLocation);
         boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s1(inserter);

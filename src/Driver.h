@@ -6,6 +6,7 @@
 #include "Trip.h"
 #include "Passenger.h"
 #include "Taxi.h"
+#include "BFS.h"
 /*
  * Driver class represents a driver. It holds the driver fields and
  * in charge of moving on the graph.

@@ -8,11 +8,14 @@
 
 #include "Socket.h"
 #include "../clientDetails.h"
+#include "Connector.h"
+
 
 class Tcp: public Socket {
 private:
     vector<pthread_t*> threads;
     int descriptorCommunicateClient;
+
 public:
     /***********************************************************************
     * function name: Tcp												   *

@@ -1,5 +1,4 @@
 #include "Grid.h"
-#include "Node.h"
 #include <boost/serialization/export.hpp>
 
 /*
@@ -19,8 +18,7 @@ Grid::Grid(int xSize, int ySize) {
         }
     }
 }
-
-Grid::Grid(Graph* g){
+ Grid::Grid(Graph *g) {
     this->sizeX = g->getSizeX();
     this->sizeY = g->getSizeY();
     //Node** oldNodes = g->getNodes();

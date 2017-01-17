@@ -266,7 +266,7 @@ void TaxiCenter::resetDrivers(vector<Driver> ds) {
  * used when the driver has finished its first trip
  * and is waiting to be assigned another one,
  * and is then added back to taxi center
- *sdf/
+ */
 void TaxiCenter::deleteDriver(int id) {
     int i=0;
     while(drivers[i].getDriverId() != id) {

@@ -4,7 +4,6 @@
 
 #include <boost/serialization/access.hpp>
 #include <queue>
-#include "Node.h"
 #include "Graph.h"
 #include <boost/serialization/access.hpp>
 #include <boost/archive/text_iarchive.hpp>

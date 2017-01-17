@@ -4,9 +4,7 @@
 
 #ifndef GTESTEX3_BFS_H
 #define GTESTEX3_BFS_H
-#include "Node.h"
 #include <queue>
-#include "Graph.h"
 #include "Grid.h"
 #include "Coordinate.h"
 #include "Searchable.h"
