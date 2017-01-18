@@ -78,10 +78,12 @@ double Trip::getTariff() {
 }
 
 Point Trip::getStart() {
-    return start;
+    Point p = Point(xStart, yStart);
+    return p;
 }
 Point Trip::getEnd() {
-    return end;
+    Point p = Point(xEnd, yEnd);
+    return p;
 }
 
 void Trip::addMeters() {

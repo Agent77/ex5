@@ -67,4 +67,11 @@ Point::~Point() {
 
 }
 
+bool Point::equal(Point p) {
+    if(p.getX() == locs[0] && p.getY() == locs[1]) {
+        return true;
+    }
+    return false;
+}
+
 BOOST_CLASS_EXPORT(Point);

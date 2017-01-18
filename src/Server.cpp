@@ -6,9 +6,8 @@
 #include "Server.h"
 #include "StandardCab.h"
 #include "LuxuryCab.h"
-#include "Point.h"
+
 #include "BFS.h"
-#include "Driver.h"
 #include "City.h"
 #include "TaxiCenter.h"
 //#include <boost/lexical_cast.hpp>
@@ -29,6 +28,7 @@
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
 #include "sockets/Tcp.h"
+#include "waitingPoint.h"
 
 using namespace std;
 static void* assist(void* s);
@@ -46,6 +46,7 @@ Socket* tcp;
 int rank;
 int allClientsAssisted;
 int numOfClients;
+vector<waitingPoint> landmarks;
 void* createMainSocket(string port);
 
 /***********************************************************************
@@ -159,8 +160,9 @@ static void* acceptClients(void* dummy) {
                 cin >> input;
                 //threadCommand = 2;
                 Trip t = city.createTrip(input);
-                t.setRank(rank);
-                rank++;
+                Point p = Point(t.getEndX(), t.getEndY());
+                waitingPoint w = waitingPoint(p);
+                landmarks.push_back(w);
                 tc.addTrip(t);
                 break;
             }
@@ -332,15 +334,26 @@ void Server::SendTripToClient() {
     int numOfTrips = tc.checkTripTimes(timeClock.getTime());
     if(myDriver->hasTrip()) {
         return;
-        //check location and find appropriate trip
     }
     // SEND TRIP TO CLIENT
-    for (int i = 0; i < numOfTrips; i++) {
+
+    if(numOfTrips > 0) {
+
         //gets trip that starts at current time
         pthread_mutex_lock(&mutex1);
+        trip = tc.getNextTrip(timeClock.getTime());
+        int i=0;
+        while (landmarks[i].getPoint().equal(trip.getStart())){
+            i++;
+        }
 
-            trip = tc.getNextTrip(timeClock.getTime());
-        pthread_mutex_unlock(&mutex1);
+        if(landmarks[i].isNextDriver(myDriver->getDriverId())){
+        //ERASE DRIVER FROM VECTOR
+            landmarks[i].deleteDriver();
+            if(landmarks[i].isEmpty()) {
+                landmarks.erase(landmarks.begin() +i);
+            }
+            pthread_mutex_unlock(&mutex1);
         myDriver->setTrip(&trip);
         Graph *tempMap=tc.getMap();
         myDriver->setMap(tempMap);
@@ -359,6 +372,10 @@ void Server::SendTripToClient() {
         tcp->sendData(serializedTrip, clientSocket);
         verifyResponse();
         cout<<"AFTER SENDING TRIP"<<endl;
+    }
+        else {
+            tc.addTrip(trip);
+        }
     }
 }
 
@@ -397,7 +414,7 @@ void Server::receiveDriver() {
     //adds received driver to temp vector of drivers, until it is assigned a trip
     //waitingDrivers.push_back(*receivedDriver);
     myDriver = receivedDriver;
-    waitingDrivers.push_back(*receivedDriver);
+
     cout << "SOCKET: " << clientSocket << "RECEIVED DRIVER: "<< myDriver->getDriverId() << endl;
     //delete receivedDriver;
 }
@@ -459,6 +476,11 @@ void Server::sendNextLocation() {
         delete ptrPoint;
         //need to assign driver a new trip
         if (myDriver->arrived()) {
+            int i=0;
+            while (landmarks[i].getPoint().equal(myDriver->getTrip()->getEnd())) {
+                i++;
+            }
+            landmarks[i].addDriver(myDriver->getDriverId());
             tc.deleteDriver(myDriver->getDriverId());
             myDriver->eraseTrip();
             Server::SendTripToClient();
@@ -519,10 +541,3 @@ void Server::verifyResponse() {
 void Server::setRank(int r) {
     rank = r;
 }
-
-bool Server::myTurnToTakeTrip() {
-    //CHECK IF ALREADY ON SECOND TRIP
-    //if my driver is at that point AND has lowest rank
-
-}
-
