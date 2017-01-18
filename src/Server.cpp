@@ -329,61 +329,61 @@ void Server::initialize() {
 	***********************************************************************/
 void Server::SendTripToClient() {
     std::string serializedTrip;
-    int counter=0;
+    int counter = 0;
     Trip trip;
 
     //Finds how many trips start at the current time
     int numOfTrips = tc.checkTripTimes(timeClock.getTime());
-    if(myDriver->hasTrip()) {
+    if (myDriver->hasTrip()) {
         return;
     }
     // SEND TRIP TO CLIENT
 
-    if(numOfTrips > 0) {
+    if (numOfTrips > 0) {
 
         //gets trip that starts at current time
         pthread_mutex_lock(&mutex1);
-        cout << "@@@@@@ INDEX 0: "<< landmarks[0].getPoint().getY()<<endl;
+        //Check if this driver is next
+        if ( == myDriver->getDriverId()) {
+            trip = tc.getNextTrip(timeClock.getTime());
+            int i = 0;
+            //cout << "NEXT TRIP: "<<trip.getStart().getX()<<endl;
 
-        trip = tc.getNextTrip(timeClock.getTime());
-        int i = 0;
-        cout << "NEXT TRIP: "<<trip.getStart().getX()<<endl;
+            //while (!landmarks[i].getPoint().equal(trip.getStart())) {
+            //    i++;
+            //}
+            /* if (!landmarks[i].isEmpty()) {
+                 if (landmarks[i].isNextDriver(myDriver->getDriverId())) {
+                     cout << "SOCKET " << clientSocket<< "TOOK THE NEW TRIP WITH TRIP ID "<< trip.getId()<<endl;
+                     //ERASE DRIVER FROM VECTOR
+                     landmarks[i].deleteDriver();
+                     if (landmarks[i].isEmpty()) {
+                         landmarks.erase(landmarks.begin() + i);
+                     }*/
+            myDriver->setTrip(&trip);
+            Graph *tempMap = tc.getMap();
+            myDriver->setMap(tempMap);
+            tc.calculatePath(&calc, myDriver);
 
-        while (!landmarks[i].getPoint().equal(trip.getStart())) {
-            i++;
-        }
-        cout << "i IN SEND TRIP" << i<<endl;
-        if (!landmarks[i].isEmpty()) {
-            if (landmarks[i].isNextDriver(myDriver->getDriverId())) {
-                cout << "SOCKET " <<clientSocket<< "TOOK THE NEW TRIP WITH TRIP ID "<< trip.getId()<<endl;
-                //ERASE DRIVER FROM VECTOR
-                landmarks[i].deleteDriver();
-                if (landmarks[i].isEmpty()) {
-                    landmarks.erase(landmarks.begin() + i);
-                }
-                myDriver->setTrip(&trip);
-                Graph *tempMap = tc.getMap();
-                myDriver->setMap(tempMap);
-                tc.calculatePath(&calc, myDriver);
-                Trip *trip1 = &trip;
-                //SERIALIZATION OF TRIP
-                boost::iostreams::back_insert_device<std::string> inserter(serializedTrip);
-                boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
-                boost::archive::binary_oarchive oa(s);
-                oa << trip1;
-                s.flush();
-                //Notifies client that they are going to receive a trip now
-                cout << "BEFORE SENDING TRIP COMMAND" << endl;
-                Server::sendCommand(2);
-                cout << "BEFORE SENDING TRIP" << endl;
-                tcp->sendData(serializedTrip, clientSocket);
-                verifyResponse();
-                cout << "AFTER SENDING TRIP" << endl;
-            } else {
-                tc.addTrip(trip);
-            }
+            Trip *trip1 = &trip;
+            //SERIALIZATION OF TRIP
+            boost::iostreams::back_insert_device<std::string> inserter(serializedTrip);
+            boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
+            boost::archive::binary_oarchive oa(s);
+            oa << trip1;
+            s.flush();
+            //Notifies client that they are going to receive a trip now
+            cout << "BEFORE SENDING TRIP COMMAND" << endl;
+            Server::sendCommand(2);
+            cout << "BEFORE SENDING TRIP" << endl;
+            tcp->sendData(serializedTrip, clientSocket);
+            verifyResponse();
+            cout << "AFTER SENDING TRIP" << endl;
+        } else {
+            tc.addTrip(trip);
         }
         pthread_mutex_unlock(&mutex1);
+
     }
 }
 
@@ -460,7 +460,7 @@ void Server::sendNextLocation() {
     cout << "IN SEND NEXT LOCATION" <<endl;
     int x = 0;
     int y = 0;
-    cout << "SOCKET: "<<clientSocket<<"TRIP TIME: "<<myDriver->getTrip()->getTripTime()<<endl;
+    cout << "SOCKET: "<<clientSocket<<"TRIP TIME: "<< myDriver->getTrip()->getTripTime()<<endl;
     if(myDriver->hasTrip()) {
         if (myDriver->getTrip()->getTripTime() < timeClock.getTime()) {
             cout << "IN IF OF SEND NEXT LOCATION" << endl;
