@@ -222,6 +222,7 @@ static void* acceptClients(void* dummy) {
                     // ASSIGNS A VEHICLE TO CLIENT ONLY IF TRIP TIME ARRIVES
                     if(missionTime < 0) {
                         server->receiveDriver();
+
                         server->assignVehicleToClient();
                         missionTime++;
                     }
@@ -342,39 +343,39 @@ void Server::SendTripToClient() {
         //gets trip that starts at current time
         pthread_mutex_lock(&mutex1);
         trip = tc.getNextTrip(timeClock.getTime());
-        int i=0;
-        while (landmarks[i].getPoint().equal(trip.getStart())){
+        int i = 0;
+        while (landmarks[i].getPoint().equal(trip.getStart())) {
             i++;
         }
-
-        if(landmarks[i].isNextDriver(myDriver->getDriverId())){
-        //ERASE DRIVER FROM VECTOR
-            landmarks[i].deleteDriver();
-            if(landmarks[i].isEmpty()) {
-                landmarks.erase(landmarks.begin() +i);
+        if (!landmarks[i].isEmpty()) {
+            if (landmarks[i].isNextDriver(myDriver->getDriverId())) {
+                //ERASE DRIVER FROM VECTOR
+                landmarks[i].deleteDriver();
+                if (landmarks[i].isEmpty()) {
+                    landmarks.erase(landmarks.begin() + i);
+                }
+                pthread_mutex_unlock(&mutex1);
+                myDriver->setTrip(&trip);
+                Graph *tempMap = tc.getMap();
+                myDriver->setMap(tempMap);
+                tc.calculatePath(&calc, myDriver);
+                Trip *trip1 = &trip;
+                //SERIALIZATION OF TRIP
+                boost::iostreams::back_insert_device<std::string> inserter(serializedTrip);
+                boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
+                boost::archive::binary_oarchive oa(s);
+                oa << trip1;
+                s.flush();
+                //Notifies client that they are going to receive a trip now
+                cout << "BEFORE SENDING TRIP COMMAND" << endl;
+                Server::sendCommand(2);
+                cout << "BEFORE SENDING TRIP" << endl;
+                tcp->sendData(serializedTrip, clientSocket);
+                verifyResponse();
+                cout << "AFTER SENDING TRIP" << endl;
+            } else {
+                tc.addTrip(trip);
             }
-            pthread_mutex_unlock(&mutex1);
-        myDriver->setTrip(&trip);
-        Graph *tempMap=tc.getMap();
-        myDriver->setMap(tempMap);
-        tc.calculatePath(&calc, myDriver);
-        Trip* trip1 = &trip;
-        //SERIALIZATION OF TRIP
-        boost::iostreams::back_insert_device<std::string> inserter(serializedTrip);
-        boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
-        boost::archive::binary_oarchive oa(s);
-        oa << trip1;
-        s.flush();
-        //Notifies client that they are going to receive a trip now
-        cout<<"BEFORE SENDING TRIP COMMAND"<<endl;
-        Server::sendCommand(2);
-        cout << "BEFORE SENDING TRIP" << endl;
-        tcp->sendData(serializedTrip, clientSocket);
-        verifyResponse();
-        cout<<"AFTER SENDING TRIP"<<endl;
-    }
-        else {
-            tc.addTrip(trip);
         }
     }
 }
@@ -414,7 +415,10 @@ void Server::receiveDriver() {
     //adds received driver to temp vector of drivers, until it is assigned a trip
     //waitingDrivers.push_back(*receivedDriver);
     myDriver = receivedDriver;
-
+    if(!landmarks.empty()) {
+        landmarks.push_back(Point(0, 0));
+    }
+    landmarks[0].addDriver(receivedDriver->getDriverId());
     cout << "SOCKET: " << clientSocket << "RECEIVED DRIVER: "<< myDriver->getDriverId() << endl;
     //delete receivedDriver;
 }
