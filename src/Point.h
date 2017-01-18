@@ -30,7 +30,7 @@ public:
     int getX();
     Point(Coordinate* cor);
     int getY();
-    bool equal(Point p);
+    bool equal(Coordinate* c);
 
 };
 #endif //EXONE_POINT_H

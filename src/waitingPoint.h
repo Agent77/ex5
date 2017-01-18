@@ -6,7 +6,6 @@
 #define EX4_WAITINGPOINT_H
 
 
-#include "Point.h"
 #include "Driver.h"
 
 class waitingPoint {

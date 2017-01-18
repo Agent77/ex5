@@ -1,6 +1,6 @@
 #ifndef EX1_GRID_H
 #define EX1_GRID_H
-#include "Point.h"
+
 #include "Graph.h"
 #include <string.h>
 #include <vector>

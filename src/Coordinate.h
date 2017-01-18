@@ -40,6 +40,7 @@ public:
     virtual void printFormat(ostream& o) =0;
     virtual bool equalTo(Coordinate* c){};
     virtual Coordinate* getMyLocation();
+    virtual bool equal(Coordinate *)=0;
 protected:
     int locs[2];
 };

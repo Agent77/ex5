@@ -67,8 +67,8 @@ Point::~Point() {
 
 }
 
-bool Point::equal(Point p) {
-    if(p.getX() == locs[0] && p.getY() == locs[1]) {
+bool Point::equal(Coordinate *cor) {
+    if(cor->getX() == locs[0] && cor->getY() == locs[1]) {
         return true;
     }
     return false;

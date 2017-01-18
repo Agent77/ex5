@@ -128,7 +128,6 @@ static void* acceptClients(void* dummy) {
     char action1;
     string input;
     string s;
-    landmarks.push_back(Point(0, 0));
 
 //Actions the user can perform
     while (run) {
@@ -161,9 +160,8 @@ static void* acceptClients(void* dummy) {
                 cin >> input;
                 //threadCommand = 2;
                 Trip t = city.createTrip(input);
-                Point p = Point(t.getEndX(), t.getEndY());
-                waitingPoint w = waitingPoint(p);
-                landmarks.push_back(w);
+
+
                 tc.addTrip(t);
                 break;
             }
@@ -334,32 +332,25 @@ void Server::SendTripToClient() {
 
     //Finds how many trips start at the current time
     int numOfTrips = tc.checkTripTimes(timeClock.getTime());
-    if (myDriver->hasTrip()) {
+    /*if (myDriver->hasTrip()) {
         return;
-    }
+    }*/
     // SEND TRIP TO CLIENT
 
     if (numOfTrips > 0) {
-
+        //if (myDriver->getDriverId()==waitingDrivers[0].getDriverId())
         //gets trip that starts at current time
-        pthread_mutex_lock(&mutex1);
-        //Check if this driver is next
-        if ( == myDriver->getDriverId()) {
-            trip = tc.getNextTrip(timeClock.getTime());
-            int i = 0;
-            //cout << "NEXT TRIP: "<<trip.getStart().getX()<<endl;
 
-            //while (!landmarks[i].getPoint().equal(trip.getStart())) {
-            //    i++;
-            //}
-            /* if (!landmarks[i].isEmpty()) {
-                 if (landmarks[i].isNextDriver(myDriver->getDriverId())) {
-                     cout << "SOCKET " << clientSocket<< "TOOK THE NEW TRIP WITH TRIP ID "<< trip.getId()<<endl;
-                     //ERASE DRIVER FROM VECTOR
-                     landmarks[i].deleteDriver();
-                     if (landmarks[i].isEmpty()) {
-                         landmarks.erase(landmarks.begin() + i);
-                     }*/
+        //pthread_mutex_lock(&mutex1);
+        //Check if this driver is next
+        trip = tc.getNextTrip(timeClock.getTime());
+        int i = 0;
+        Point p=trip.getStart();
+        while(!waitingDrivers[i].getTrip()->getEnd().equal(&p)){
+            i++;
+        }
+        if (myDriver->getDriverId()==waitingDrivers[i].getDriverId()) {
+            waitingDrivers.erase(waitingDrivers.begin()+i);
             myDriver->setTrip(&trip);
             Graph *tempMap = tc.getMap();
             myDriver->setMap(tempMap);
@@ -368,7 +359,8 @@ void Server::SendTripToClient() {
             Trip *trip1 = &trip;
             //SERIALIZATION OF TRIP
             boost::iostreams::back_insert_device<std::string> inserter(serializedTrip);
-            boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
+            boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(
+                    inserter);
             boost::archive::binary_oarchive oa(s);
             oa << trip1;
             s.flush();
@@ -379,7 +371,7 @@ void Server::SendTripToClient() {
             tcp->sendData(serializedTrip, clientSocket);
             verifyResponse();
             cout << "AFTER SENDING TRIP" << endl;
-        } else {
+        }else {
             tc.addTrip(trip);
         }
         pthread_mutex_unlock(&mutex1);
@@ -422,8 +414,8 @@ void Server::receiveDriver() {
     //adds received driver to temp vector of drivers, until it is assigned a trip
     //waitingDrivers.push_back(*receivedDriver);
     myDriver = receivedDriver;
+    waitingDrivers.push_back(*myDriver);
 
-    landmarks[0].addDriver(receivedDriver->getDriverId());
     cout << "@@@@@@SOCKET: " << clientSocket << "RECEIVED DRIVER: "<< myDriver->getDriverId() << endl;
     //delete receivedDriver;
 }
@@ -486,12 +478,7 @@ void Server::sendNextLocation() {
             delete ptrPoint;
             //need to assign driver a new trip
             if (myDriver->arrived()) {
-                int i = 0;
-                while (landmarks[i].getPoint().equal(myDriver->getTrip()->getEnd())) {
-                    i++;
-
-                }
-                landmarks[i].addDriver(myDriver->getDriverId());
+                waitingDrivers.push_back(*myDriver);
                 tc.deleteDriver(myDriver->getDriverId());
                 myDriver->eraseTrip();
                 Server::SendTripToClient();

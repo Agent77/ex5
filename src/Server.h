@@ -10,7 +10,7 @@
 #include "Driver.h"
 #include "Trip.h"
 #include "Graph.h"
-#include "Coordinate.h"
+
 #include "TaxiCenter.h"
 #include "../src/sockets/Socket.h"
 #include "Clock.h"
