@@ -85,14 +85,20 @@ int DriverClient::receiveCommand() {
     int command = 0;
     while(command!=7) {
         sendVerification();
+        cout << "after send verification"<<endl;
         //RECEIVE COMMAND
         client->reciveData(buffer, sizeof(buffer), 0);
+
         string commandString = createString(buffer, sizeof(buffer));
         boost::iostreams::basic_array_source<char> device2(commandString.c_str(), commandString.size());
         boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s4(device2);
         boost::archive::binary_iarchive ia2(s4);
         ia2 >> command;
+        cout << "after receive command"<<endl;
+
         sendVerification();
+        cout << "after send verification"<<endl;
+
         if (command == newPoint) {
             DriverClient::receiveNextPoint();
         }
@@ -183,6 +189,7 @@ void DriverClient::receiveVehicle() {
     char buffer[1024];
     // GETS TAXI IN RETURN
     int resultData = client->reciveData(buffer, sizeof(buffer),0);
+    cout << "AFTER RECEIVE DATA IN RECEIVE VEHICLE" << endl;
     // DESERIALIZATION
     string taxiString = createString(buffer, sizeof(buffer));
     Taxi *taxi;
@@ -191,6 +198,8 @@ void DriverClient::receiveVehicle() {
     boost::archive::binary_iarchive ia(s2);
     ia >> taxi;
     //GIVE DRIVER TAXI
+    cout << "RECEIVED TAXI ID: "<< taxi->getId() << endl;
+
     driver.setTaxi(*taxi);
     delete taxi;
 }
@@ -212,7 +221,7 @@ string DriverClient::createString(char* buffer, int bufferSize) {
 }
 
 void DriverClient::sendVerification() {
-    int verification = 1;
+    int verification = 77;
     // SERIALIZATION OF COMMAND
     std::string verify;
     boost::iostreams::back_insert_device<std::string> inserter(verify);

@@ -10,6 +10,8 @@ Driver::Driver() {
     this->maritalStatus='c';
     this->vehicleId=0;
     this->exp=0;
+    this->hasTripAlready = false;
+    //this->myTrip = NULL;
 }
 
 /*Driver::Driver(int driverId, int age, char mStatus, int exp, int vehicleId, Graph* map) {
@@ -28,6 +30,9 @@ Driver::Driver(int driverId, int age, char mStatus, int exp, int vehicleId) {
     this->maritalStatus=mStatus;
     this->exp=exp;
     this->vehicleId=vehicleId;
+    this->hasTripAlready = false;
+    //this->myTrip = NULL;
+
 
 }
 
@@ -36,46 +41,9 @@ Driver::Driver(int driverId, int age, char mStatus, int exp, int vehicleId) {
 * continue travelling until it arrives at its destination.
 */
 void Driver::drive() {
-    Graph* copyGraph = new Grid(gps);
+    Graph* copyGraph = new Grid(gps->getSizeX(), gps->getSizeY());
     BFS bfs =  BFS(copyGraph);
     vector<Coordinate*> path;
-    /*Coordinate *start;
-    Coordinate *end;
-    Coordinate *c;
-
-    do {
-            int x = myTrip.getStartX();
-            int y = myTrip.getStartY();
-            start = new Point(x, y);
-            x = myTrip.getEndX();
-            y = myTrip.getEndY();
-            end = new Point(x, y);
-            //Coordinate *c;
-            if(end->equalTo(start)) {
-                //path.push_back(end);
-                break;
-            }
-            c = bfs.getNextInPath(start, end);
-            if(taxi.getType() == 2) {
-                c = bfs.getNextInPath(c, end);
-            }
-            path.push_back(c);
-            //Trip *newTrip = new Trip(myTrip.getId(), c->getCoordinates()[0], c->getCoordinates()[1], myTrip.getEndX(),
-                //                     myTrip.getEndY(), myTrip.getNumOfPassengers(), myTrip.getTariff(),
-                 //                    myTrip.getTripTime());
-            myTrip.updateStartPoint(c);
-            if(start->equalTo(end)) {
-                delete start;
-                delete end;
-                break;
-            }
-            delete start;
-            delete end;
-            //myTrip = *newTrip;
-           // delete newTrip;
-            //gps->resetGraph();
-        } while (c != NULL);
-*/
     Coordinate *start;
     Coordinate *end;
     int x = myTrip.getStartX();
@@ -88,8 +56,6 @@ void Driver::drive() {
     myTrip.setPath(path);
     delete copyGraph;
 }
-
-
 
 
  void* Driver::driveNow(void* d) {
@@ -130,8 +96,8 @@ void Driver::setTaxi(Taxi t) {
 }
 
 void Driver::setTrip(Trip t) {
-
     myTrip =  Trip(t);
+    hasTripAlready = true;
 
 }
 
@@ -173,4 +139,12 @@ bool Driver::arrived() {
  */
 void Driver::setMap(Graph* map) {
     gps = map;
+}
+
+bool Driver::hasTrip() {
+    return hasTripAlready;
+}
+
+void Driver::eraseTrip() {
+    hasTripAlready = false;
 }

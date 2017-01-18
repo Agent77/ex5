@@ -82,7 +82,6 @@ int Tcp::initialize(int c) {
 		}*/
         //if client
         else {
-        cout << "PORT: "<< port_number << endl;
 
         struct sockaddr_in sin;
         memset(&sin, 0, sizeof(sin));
@@ -92,9 +91,7 @@ int Tcp::initialize(int c) {
         if (connect(this->socketDescriptor,
                     (struct sockaddr *) &sin, sizeof(sin)) < 0) {
             //return an error represent error at this method
-            cout << "CONNECT? "<< ERROR_CONNECT;
         }
-        cout << "PORT: "<< port_number << endl;
 
     }
     //return correct if there were no problem
@@ -119,6 +116,7 @@ int Tcp::acceptClient() {
 ***********************************************************************/
 int Tcp::sendData(string data, int port) {
     descriptorCommunicateClient = port;
+
     int data_len = data.length()+1;
     const char * datas = data.c_str();
     int sent_bytes = send(this->isServer ? this->descriptorCommunicateClient
@@ -140,6 +138,7 @@ int Tcp::sendData(string data, int port) {
 ***********************************************************************/
 int Tcp::reciveData(char* buffer, int size, int socket) {
     descriptorCommunicateClient = socket;
+
     int read_bytes = recv(this->isServer ? this->descriptorCommunicateClient
                                          : this->socketDescriptor, buffer, size, 0);
     //checking the errors

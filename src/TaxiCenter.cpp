@@ -230,10 +230,10 @@ Taxi TaxiCenter::assignTaxi(int driverId){
  */
 Trip TaxiCenter::getNextTrip(int currentTime) {
     vector<Trip>::iterator trip = trips.begin();
-    while ((*(trip)).getTripTime()< currentTime && trip != trips.end()){ //TODO does this stop loop
+    while ((*(trip)).getTripTime() > currentTime && trip != trips.end()) { //TODO does this stop loop
         trip++;
     }
-    Trip nextTrip= *(trip);
+    Trip nextTrip = *(trip);
     //removes trip from possible trips to assign in future
     trips.erase(trip);
     return nextTrip;

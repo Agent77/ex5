@@ -8,7 +8,7 @@
 
 #include "Socket.h"
 #include "../clientDetails.h"
-#include "Connector.h"
+
 
 
 class Tcp: public Socket {

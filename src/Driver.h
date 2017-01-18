@@ -36,6 +36,7 @@ private:
     Graph* gps;
     Taxi taxi;
     Trip myTrip;
+    bool hasTripAlready;
    // std::vector <Passenger> myPassengers;
 
 public:
@@ -62,6 +63,8 @@ public:
     void drive();
     bool arrived();
     void setMap(Graph* map);
+    bool hasTrip();
+    void eraseTrip();
 };
 
 #endif //EX2_DRIVER_H

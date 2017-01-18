@@ -28,6 +28,7 @@ private:
     int clientSocket;
     int portNum;
     pthread_t calc;
+    int rank;
 
     //clientDetails client;
 
@@ -123,6 +124,7 @@ public:
     static void* assist(void* s);
     void assignTrip(Trip t);
     void verifyResponse();
+    void setRank(int rank);
 
 };
 
