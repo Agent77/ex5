@@ -128,6 +128,7 @@ static void* acceptClients(void* dummy) {
     char action1;
     string input;
     string s;
+    landmarks.push_back(Point(0, 0));
 
 //Actions the user can perform
     while (run) {
@@ -342,19 +343,24 @@ void Server::SendTripToClient() {
 
         //gets trip that starts at current time
         pthread_mutex_lock(&mutex1);
+        cout << "@@@@@@ INDEX 0: "<< landmarks[0].getPoint().getY()<<endl;
+
         trip = tc.getNextTrip(timeClock.getTime());
         int i = 0;
-        while (landmarks[i].getPoint().equal(trip.getStart())) {
+        cout << "NEXT TRIP: "<<trip.getStart().getX()<<endl;
+
+        while (!landmarks[i].getPoint().equal(trip.getStart())) {
             i++;
         }
+        cout << "i IN SEND TRIP" << i<<endl;
         if (!landmarks[i].isEmpty()) {
             if (landmarks[i].isNextDriver(myDriver->getDriverId())) {
+                cout << "SOCKET " <<clientSocket<< "TOOK THE NEW TRIP WITH TRIP ID "<< trip.getId()<<endl;
                 //ERASE DRIVER FROM VECTOR
                 landmarks[i].deleteDriver();
                 if (landmarks[i].isEmpty()) {
                     landmarks.erase(landmarks.begin() + i);
                 }
-                pthread_mutex_unlock(&mutex1);
                 myDriver->setTrip(&trip);
                 Graph *tempMap = tc.getMap();
                 myDriver->setMap(tempMap);
@@ -377,6 +383,7 @@ void Server::SendTripToClient() {
                 tc.addTrip(trip);
             }
         }
+        pthread_mutex_unlock(&mutex1);
     }
 }
 
@@ -415,11 +422,9 @@ void Server::receiveDriver() {
     //adds received driver to temp vector of drivers, until it is assigned a trip
     //waitingDrivers.push_back(*receivedDriver);
     myDriver = receivedDriver;
-    if(!landmarks.empty()) {
-        landmarks.push_back(Point(0, 0));
-    }
+
     landmarks[0].addDriver(receivedDriver->getDriverId());
-    cout << "SOCKET: " << clientSocket << "RECEIVED DRIVER: "<< myDriver->getDriverId() << endl;
+    cout << "@@@@@@SOCKET: " << clientSocket << "RECEIVED DRIVER: "<< myDriver->getDriverId() << endl;
     //delete receivedDriver;
 }
 
@@ -456,40 +461,43 @@ void Server::sendNextLocation() {
     int x = 0;
     int y = 0;
     cout << "SOCKET: "<<clientSocket<<"TRIP TIME: "<<myDriver->getTrip()->getTripTime()<<endl;
-    if (myDriver->getTrip()->getTripTime() < timeClock.getTime()) {
-        cout <<"IN IF OF SEND NEXT LOCATION"<<endl;
-        pthread_join(calc, NULL);
-        if (!tc.hasDriver(myDriver->getDriverId())) {
-            tc.addDriver(*myDriver);
-        }
-        Point *ptrPoint = myDriver->getTrip()->getNextInPath();
-        tc.moveDriver(myDriver->getDriverId());
-        myDriver->getTrip()->updateStartPoint(*ptrPoint);
-        std::string nextLocation;
-        boost::iostreams::back_insert_device<std::string> inserter(nextLocation);
-        boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s1(inserter);
-        boost::archive::binary_oarchive oa(s1);
-        oa << ptrPoint;
-        s1.flush();
-        //notifies clients they are about to receive a new location
-        cout << "BEFORE SENDING NP COMMAND" << endl;
-        Server::sendCommand(9);
-        cout << "BEFORE SENDING NP" << endl;
-        tcp->sendData(nextLocation, clientSocket);
-        verifyResponse();
-        delete ptrPoint;
-        //need to assign driver a new trip
-        if (myDriver->arrived()) {
-            int i=0;
-            while (landmarks[i].getPoint().equal(myDriver->getTrip()->getEnd())) {
-                i++;
+    if(myDriver->hasTrip()) {
+        if (myDriver->getTrip()->getTripTime() < timeClock.getTime()) {
+            cout << "IN IF OF SEND NEXT LOCATION" << endl;
+            pthread_join(calc, NULL);
+            if (!tc.hasDriver(myDriver->getDriverId())) {
+                tc.addDriver(*myDriver);
             }
-            landmarks[i].addDriver(myDriver->getDriverId());
-            tc.deleteDriver(myDriver->getDriverId());
-            myDriver->eraseTrip();
-            Server::SendTripToClient();
-        }
-    }// }
+            Point *ptrPoint = myDriver->getTrip()->getNextInPath();
+            tc.moveDriver(myDriver->getDriverId());
+            myDriver->getTrip()->updateStartPoint(*ptrPoint);
+            std::string nextLocation;
+            boost::iostreams::back_insert_device<std::string> inserter(nextLocation);
+            boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s1(inserter);
+            boost::archive::binary_oarchive oa(s1);
+            oa << ptrPoint;
+            s1.flush();
+            //notifies clients they are about to receive a new location
+            cout << "BEFORE SENDING NP COMMAND" << endl;
+            Server::sendCommand(9);
+            cout << "BEFORE SENDING NP" << endl;
+            tcp->sendData(nextLocation, clientSocket);
+            verifyResponse();
+            delete ptrPoint;
+            //need to assign driver a new trip
+            if (myDriver->arrived()) {
+                int i = 0;
+                while (landmarks[i].getPoint().equal(myDriver->getTrip()->getEnd())) {
+                    i++;
+
+                }
+                landmarks[i].addDriver(myDriver->getDriverId());
+                tc.deleteDriver(myDriver->getDriverId());
+                myDriver->eraseTrip();
+                Server::SendTripToClient();
+            }
+        }// }
+    }
 }
 
 

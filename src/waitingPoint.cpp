@@ -16,7 +16,7 @@ void waitingPoint::deleteDriver() {
 }
 
 bool waitingPoint::isNextDriver(int id) {
-    if(waitingDrivers[0] ==id){
+    if(waitingDrivers[0] == id){
         return true;
     }
     return false;
