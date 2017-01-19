@@ -89,6 +89,7 @@ void TaxiCenter::requestDriverLocation(int driverId){
     }
     Coordinate* p = new Point(drivers[i].getTrip()->getStartX(),drivers[i].getTrip()->getStartY());
     cout<< *p <<endl;
+    delete p;
 
 }
 

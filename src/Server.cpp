@@ -241,6 +241,8 @@ static void* acceptClients(void* dummy) {
                  case 7:
                      //run = false;
                      server->sendCommand(7);
+                     delete server;
+                     pthread_exit(0);
                  default:
                      break;
              }
@@ -451,9 +453,8 @@ void Server::sendCommand(int command) {
 
         threadsExited += 1;
 
-
         //cout << "** THREADS EXITED: "<< threadsExited<<endl;
-        pthread_exit(0);
+
     }
     verifyResponse();
 }

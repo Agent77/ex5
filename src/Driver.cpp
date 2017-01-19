@@ -48,6 +48,8 @@ void Driver::drive() {
     path = bfs.getFullPath(start, end);
     myTrip.setPath(path);
     delete copyGraph;
+    delete start;
+    delete end;
 }
 
 
