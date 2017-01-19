@@ -23,6 +23,7 @@ Node::Node(Node* n) {
 Node::Node(Coordinate *p) {
     Point* point = (Point*)p;
     myLocation = point->getMyLocation();
+    //cout << *myLocation <<endl;
     visited = false;
     obstacle = false;
 }

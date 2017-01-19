@@ -12,6 +12,7 @@ Grid::Grid(int xSize, int ySize) {
     for (int i = 0; i < sizeX; i++) {
         for (int j = 0; j < sizeY; j++) {
             Point p = Point(i, j);
+            //cout << "POINT: ("<<p.getX()<<","<<p.getY()<<")"<<endl;
             Node* n;
             n = new Node(&p);
             arrayOfPtrsToNodes[i][j] = n;

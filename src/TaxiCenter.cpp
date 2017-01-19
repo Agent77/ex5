@@ -53,7 +53,6 @@ bool TaxiCenter::hasDriver(int id) {
 
 }
 void TaxiCenter::calculatePath(pthread_t* pathCreator, Driver* d) {
-    cout << "CALCULATING PATH..."<<endl;
     pthread_create(pathCreator, NULL, move, (void*)d);
 
     //pthread_join(*pathCreator, NULL);
@@ -62,7 +61,6 @@ void TaxiCenter::calculatePath(pthread_t* pathCreator, Driver* d) {
 void* TaxiCenter::move(void* d) {
     Driver* driver = (Driver*)d;
     driver->drive();
-    cout <<" Finished Calculation"<<endl;
     pthread_exit(0);
    //
 }

@@ -20,7 +20,9 @@
 #include <boost/iostreams/stream.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
+#include "easylogging++.h"
 
+INITIALIZE_EASYLOGGINGPP
 using namespace std;
 static void* assist(void* s);
 static void* acceptClients(void* v);
@@ -144,7 +146,7 @@ static void* acceptClients(void* dummy) {
                     tempServer->setRank(i);
                     //pthread_mutex_lock(&lockRec);
                     int socket = tcp->acceptClient();
-                    cout<<"socket: "<<i<<"is: "<<socket<<endl;
+                    LOG(INFO) << "Socket for new client: "<< socket<<endl;
                     //pthread_mutex_unlock(&lockRec);
                     tempServer->setSocket(socket);
                     pthread_create(thread, NULL, assist, (void*)tempServer);
@@ -155,6 +157,7 @@ static void* acceptClients(void* dummy) {
             case 2: {
                 cin >> input;
                 //threadCommand = 2;
+                LOG(INFO) << "Add trip: "<< input<<endl;
                 Trip t = city.createTrip(input);
 
 
@@ -163,6 +166,7 @@ static void* acceptClients(void* dummy) {
             }
             case 3: {
                 cin >> s;
+                LOG(INFO) << "Add taxi: "<< s<<endl;
                 Taxi t = city.createTaxi(s);
                 tc.addTaxi(t);
                 vehicles.push_back(t);
@@ -230,6 +234,7 @@ static void* acceptClients(void* dummy) {
 
                      pthread_mutex_lock(&lockUpdate);
                      if (missionTime != timeClock.getTime()) {
+                         LOG(INFO) << "Sending point in socket: "<< server->socketNum()<<endl;
                          server->SendTripToClient();
                          server->sendNextLocation();
                          missionTime = timeClock.getTime();
@@ -336,6 +341,8 @@ void Server::SendTripToClient() {
     //pthread_mutex_lock(&lockUpdate);
     //Finds how many trips start at the current time
     int numOfTrips = tc.checkTripTimes(timeClock.getTime());
+    LOG(INFO) << "Num of trips: "<< numOfTrips<<endl;
+
     /*if (myDriver->hasTrip()) {
         return;
     }*/
@@ -348,12 +355,16 @@ void Server::SendTripToClient() {
 
         //Check if this driver is next
         trip = tc.getNextTrip(timeClock.getTime());
+        LOG(INFO) << "Next trip id: "<< trip.getId() <<endl;
+
         int i = 0;
         Point p=trip.getStart();
         while(!waitingDrivers[i].getTrip()->getEnd().equal(&p)){
             i++;
         }
         if (myDriver->getDriverId()==waitingDrivers[i].getDriverId()) {
+            LOG(INFO) << "Socket's driver id: "<< myDriver->getDriverId()<<endl;
+
             waitingDrivers.erase(waitingDrivers.begin()+i);
             myDriver->setTrip(&trip);
             Graph *tempMap = tc.getMap();
@@ -370,7 +381,6 @@ void Server::SendTripToClient() {
             s.flush();
             //Notifies client that they are going to receive a trip now
             //pthread_mutex_lock(&lockSend);
-            cout<<"socket:"<<clientSocket<<"send 2"<<endl;
             Server::sendCommand(2);
             tcp->sendData(serializedTrip, clientSocket);
             //pthread_mutex_unlock(&lockSend);
@@ -422,6 +432,7 @@ void Server::receiveDriver() {
     //waitingDrivers.push_back(*receivedDriver);
     myDriver = receivedDriver;
     waitingDrivers.push_back(*myDriver);
+    LOG(INFO) << "received driver id: "<< myDriver->getDriverId()<<endl;
 
 
     //delete receivedDriver;
@@ -470,18 +481,13 @@ void Server::sendNextLocation() {
     int x = 0;
     int y = 0;
     if(myDriver->hasTrip()) {
-       // cout << "next location in "<< clientSocket<<endl;
         if (myDriver->getTrip()->getTripTime() < timeClock.getTime()) {
-         //   cout << "in IF of send location in socket: "<< clientSocket<<endl;
             pthread_join(calc, NULL);
-            /*while(myDriver->getTrip()->getSizeOfPath() == 0) {
-                continue;
-            }*/
-            //cout << "PATH SIZE: "<<myDriver->getTrip()->getSizeOfPath();
             if (!tc.hasDriver(myDriver->getDriverId())) {
                 tc.addDriver(*myDriver);
             }
             Point *ptrPoint = myDriver->getTrip()->getNextInPath();
+            LOG(INFO) << "Next location for socket "<<clientSocket<<":"<<*ptrPoint<<endl;
             tc.moveDriver(myDriver->getDriverId());
             myDriver->getTrip()->updateStartPoint(*ptrPoint);
             std::string nextLocation;
@@ -499,7 +505,7 @@ void Server::sendNextLocation() {
             delete ptrPoint;
             //need to assign driver a new trip
             if (myDriver->arrived()) {
-
+                LOG(INFO) << "Socket"<<clientSocket<<"arrived"<<endl;
                 waitingDrivers.push_back(*myDriver);
                 tc.deleteDriver(myDriver->getDriverId());
 

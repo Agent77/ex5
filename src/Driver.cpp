@@ -1,7 +1,9 @@
 #include "Driver.h"
 #include <unistd.h>
 #include <iostream>
+#include "easylogging++.h"
 
+INITIALIZE_EASYLOGGINGPP
 
 
 Driver::Driver() {
@@ -46,6 +48,8 @@ void Driver::drive() {
     y = myTrip.getEndY();
     end = new Point(x, y);
     path = bfs.getFullPath(start, end);
+    LOG(INFO) << "size of driver path: "<<path.size()<<endl;
+
     myTrip.setPath(path);
     delete copyGraph;
     delete start;

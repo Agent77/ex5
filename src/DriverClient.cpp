@@ -16,6 +16,9 @@
 #include <boost/iostreams/stream.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
+#include "easylogging++.h"
+
+INITIALIZE_EASYLOGGINGPP
 using namespace std;
 using namespace boost::archive;
 
@@ -50,6 +53,8 @@ DriverClient::DriverClient() {
      * and assigns its driver the trip it receives                         *
 	***********************************************************************/
 void DriverClient::receiveTrip() {
+    LOG(INFO) << "Client in received Trip"<<endl;
+
     char buffer[1024];
     // RECEIVE TRIP FROM SERVER
     client->reciveData(buffer, sizeof(buffer) ,0);
@@ -74,6 +79,7 @@ void DriverClient::receiveTrip() {
      * serialized reception                                                *
 	***********************************************************************/
 int DriverClient::receiveCommand() {
+
     char buffer[1024];
     const int newPoint = 9;
     const int newTrip = 2;
@@ -89,10 +95,8 @@ int DriverClient::receiveCommand() {
         boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s4(device2);
         boost::archive::binary_iarchive ia2(s4);
         ia2 >> command;
-        cout << "Command Received By Client: "<< command <<endl;
-
         sendVerification();
-
+        LOG(INFO) << "Client received command: "<<command<<endl;
         if (command == newPoint) {
             DriverClient::receiveNextPoint();
         }
@@ -136,9 +140,9 @@ void DriverClient::receiveNextPoint() {
     Trip* tripP = driver.getTrip();
     tripP->updateStartPoint(p);
     driver.getTrip()->updateStartPoint(p);
+    LOG(INFO) << "Client received point: "<< *p<<endl;
     delete p;
-    cout<<"NEW START X: "<<driver.getTrip()->getStartX()<<endl;
-    cout<<"NEW START Y: "<<driver.getTrip()->getStartY()<<endl;
+
 }
 
 
@@ -155,7 +159,7 @@ void DriverClient::openSocket(Driver *driverSent, string currentIp, string port)
     client = new Tcp(0,portNum);
     client->setIP(currentIp);
     int result = client->initialize(0);
-
+    LOG(INFO) << "Result from initialize: "<< result <<endl;
 
 
     // SERIALIZATION
@@ -211,6 +215,7 @@ string DriverClient::createString(char* buffer, int bufferSize) {
 }
 
 void DriverClient::sendVerification() {
+
     //cout << "** before send verification ** "<<endl;
     int verification = 77;
     // SERIALIZATION OF COMMAND
@@ -221,6 +226,7 @@ void DriverClient::sendVerification() {
     oa << verification;
     s1.flush();
     client->sendData(verify, 0);
-    cout << "** sent verification ** "<<endl;
+    LOG(INFO) << "send verification of client"<<endl;
+
 
 }
