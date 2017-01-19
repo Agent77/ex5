@@ -89,7 +89,7 @@ int DriverClient::receiveCommand() {
         boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s4(device2);
         boost::archive::binary_iarchive ia2(s4);
         ia2 >> command;
-       // cout << "Command Received By Client: "<< command <<endl;
+        cout << "Command Received By Client: "<< command <<endl;
 
         sendVerification();
 

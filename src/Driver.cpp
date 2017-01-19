@@ -32,7 +32,9 @@ Driver::Driver(int driverId, int age, char mStatus, int exp, int vehicleId) {
 * continue travelling until it arrives at its destination.
 */
 void Driver::drive() {
-    Graph* copyGraph = new Grid(gps->getSizeX(), gps->getSizeY());
+    int xSize= gps->getSizeX();
+    int ySize=gps->getSizeY();
+    Graph* copyGraph = new Grid(xSize, ySize);
     BFS bfs =  BFS(copyGraph);
     vector<Coordinate*> path;
     Coordinate *start;

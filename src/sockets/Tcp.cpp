@@ -100,7 +100,6 @@ int Tcp::acceptClient() {
 * and the socket descroptor											   *
 ***********************************************************************/
 int Tcp::sendData(string data, int port) {
-    pthread_mutex_lock(&lockSend);
 
     descriptorCommunicateClient = port;
 
@@ -113,7 +112,7 @@ int Tcp::sendData(string data, int port) {
         return ERROR_SEND;
     }
     //return correct if there were no problem
-    pthread_mutex_lock(&lockSend);
+
 
     return CORRECT;
 }
@@ -126,7 +125,7 @@ int Tcp::sendData(string data, int port) {
 * enter it to the buffer and print the data							   *
 ***********************************************************************/
 int Tcp::reciveData(char* buffer, int size, int socket) {
-    pthread_mutex_lock(&lockSend);
+
 
     descriptorCommunicateClient = socket;
 
@@ -143,7 +142,7 @@ int Tcp::reciveData(char* buffer, int size, int socket) {
         //prinrting the massege
 //		cout<<buffer<<endl;
     }
-    pthread_mutex_unlock(&lockSend);
+
 
     //return correct if there were no problem
     return read_bytes;

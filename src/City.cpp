@@ -77,8 +77,6 @@ Coordinate* City::createCoordinate(string s) {
  * The function parses a given string and creates new graph
  */
 Graph* City::createGraph(string s, string s1) {
-    int x = (int)s[0] - 48;
-    int y = (int)s1[0] - 48;
     int x1 = stoi(s);
     int y1 = stoi(s1);
     Graph *graphPointer = new Grid(x1, y1);

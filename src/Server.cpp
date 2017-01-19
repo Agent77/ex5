@@ -144,6 +144,7 @@ static void* acceptClients(void* dummy) {
                     tempServer->setRank(i);
                     //pthread_mutex_lock(&lockRec);
                     int socket = tcp->acceptClient();
+                    cout<<"socket: "<<i<<"is: "<<socket<<endl;
                     //pthread_mutex_unlock(&lockRec);
                     tempServer->setSocket(socket);
                     pthread_create(thread, NULL, assist, (void*)tempServer);
@@ -204,56 +205,60 @@ static void* acceptClients(void* dummy) {
 
  void* assist(void* s) {
      bool run = true;
-    Server* server = (Server*)s;
-    int missionTime = -1;
+     Server *server = (Server *) s;
+     int missionTime = -1;
      int driverId;
+     while (run) {
 
-    while (run) {
+         if (allClientsAssisted == 0) {
+             server->assisted = false;
+         }
 
-        if(allClientsAssisted == 0) {
-            server->assisted = false;
-        }
+         //if (!server->assisted) {
+             switch (threadCommand) {
+                 case 1:
+                     // ASSIGNS A VEHICLE TO CLIENT ONLY IF TRIP TIME ARRIVES
+                     if (missionTime < 0) {
+                         server->receiveDriver();
 
-      //  if (!server->assisted) {
-            switch(threadCommand) {
-                case 1:
-                    // ASSIGNS A VEHICLE TO CLIENT ONLY IF TRIP TIME ARRIVES
-                    if(missionTime < 0) {
-                        server->receiveDriver();
+                         server->assignVehicleToClient();
+                         missionTime++;
+                     }
 
-                        server->assignVehicleToClient();
-                        missionTime++;
-                    }
-                    break;
-                case 9:
-                    pthread_mutex_lock(&lock9);
+                     break;
+                 case 9:
 
-                    if(missionTime != timeClock.getTime()) {
-                        server->SendTripToClient();
-                        server->sendNextLocation();
-                        missionTime = timeClock.getTime();
-                    }
-                    pthread_mutex_unlock(&lock9);
+                     pthread_mutex_lock(&lockUpdate);
+                     if (missionTime != timeClock.getTime()) {
+                         server->SendTripToClient();
+                         server->sendNextLocation();
+                         missionTime = timeClock.getTime();
+                     }
+                     pthread_mutex_unlock(&lockUpdate);
 
-                    break;
-                case 7:
-                    //run = false;
-                    server->sendCommand(7);
-                default:
-                    break;
-            }
-            server->assisted = true;
-        pthread_mutex_lock(&lockUpdate);
-        allClientsAssisted += 1;
-        pthread_mutex_unlock(&lockUpdate);
 
-        if(allClientsAssisted == numOfClients) {
-                allClientsAssisted = 0;
-            }
-           // while(!commandCompleted) {
+                     break;
+                 case 7:
+                     //run = false;
+                     server->sendCommand(7);
+                 default:
+                     break;
+             }
+         if(!server->assisted) {
+             pthread_mutex_lock(&lockUpdate);
+             allClientsAssisted += 1;
+             pthread_mutex_unlock(&lockUpdate);
+             server->assisted = true;
+         }
+
+             if (allClientsAssisted == numOfClients) {
+                 allClientsAssisted = 0;
+             }
+             // while(!commandCompleted) {
              // sdf  continue;
-            //}
-        }
+             //}
+         }
+     //}
  }
 
 
@@ -326,7 +331,7 @@ void Server::SendTripToClient() {
     std::string serializedTrip;
     int counter = 0;
     Trip trip;
-
+    //pthread_mutex_lock(&lockUpdate);
     //Finds how many trips start at the current time
     int numOfTrips = tc.checkTripTimes(timeClock.getTime());
     /*if (myDriver->hasTrip()) {
@@ -338,7 +343,7 @@ void Server::SendTripToClient() {
         //if (myDriver->getDriverId()==waitingDrivers[0].getDriverId())
         //gets trip that starts at current time
 
-        pthread_mutex_lock(&lockUpdate);
+
         //Check if this driver is next
         trip = tc.getNextTrip(timeClock.getTime());
         int i = 0;
@@ -363,6 +368,7 @@ void Server::SendTripToClient() {
             s.flush();
             //Notifies client that they are going to receive a trip now
             //pthread_mutex_lock(&lockSend);
+            cout<<"socket:"<<clientSocket<<"send 2"<<endl;
             Server::sendCommand(2);
             tcp->sendData(serializedTrip, clientSocket);
             //pthread_mutex_unlock(&lockSend);
@@ -371,7 +377,7 @@ void Server::SendTripToClient() {
         }else {
             tc.addTrip(trip);
         }
-        pthread_mutex_unlock(&lockUpdate);
+        //pthread_mutex_unlock(&lockUpdate);
 
     }
 }
@@ -413,9 +419,8 @@ void Server::receiveDriver() {
     //adds received driver to temp vector of drivers, until it is assigned a trip
     //waitingDrivers.push_back(*receivedDriver);
     myDriver = receivedDriver;
-    pthread_mutex_lock(&lockUpdate);
     waitingDrivers.push_back(*myDriver);
-    pthread_mutex_unlock(&lockUpdate);
+
 
     //delete receivedDriver;
 }
@@ -443,9 +448,9 @@ void Server::sendCommand(int command) {
 
     //cout << "sent verification to " << clientSocket <<endl;
     if(command == 7) {
-        pthread_mutex_lock(&lockUpdate);
+
         threadsExited += 1;
-        pthread_mutex_unlock(&lockUpdate);
+
 
         //cout << "** THREADS EXITED: "<< threadsExited<<endl;
         pthread_exit(0);
@@ -468,9 +473,9 @@ void Server::sendNextLocation() {
         if (myDriver->getTrip()->getTripTime() < timeClock.getTime()) {
          //   cout << "in IF of send location in socket: "<< clientSocket<<endl;
             pthread_join(calc, NULL);
-            while(myDriver->getTrip()->getSizeOfPath() == 0) {
+            /*while(myDriver->getTrip()->getSizeOfPath() == 0) {
                 continue;
-            }
+            }*/
             //cout << "PATH SIZE: "<<myDriver->getTrip()->getSizeOfPath();
             if (!tc.hasDriver(myDriver->getDriverId())) {
                 tc.addDriver(*myDriver);
@@ -493,10 +498,10 @@ void Server::sendNextLocation() {
             delete ptrPoint;
             //need to assign driver a new trip
             if (myDriver->arrived()) {
-                pthread_mutex_lock(&lockUpdate);
+
                 waitingDrivers.push_back(*myDriver);
                 tc.deleteDriver(myDriver->getDriverId());
-                pthread_mutex_unlock(&lockUpdate);
+
                 myDriver->eraseTrip();
                 Server::SendTripToClient();
             }

@@ -30,14 +30,13 @@ protected:
 public:
     Graph(){};
     ~Graph() {
-        /* for (int i = 0; i < sizeX; i++) {
+         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++) {
                Node* n = arrayOfPtrsToNodes[i][j];
                delete n->getMyLocation();
               delete n;
           }
          }
-    };*/
     };
     virtual Node* getLocationOfPrev(Node* n) {};
     virtual std::vector<Node*> getNeighbors(Node* n)=0;
