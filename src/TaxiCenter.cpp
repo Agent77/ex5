@@ -1,12 +1,14 @@
 
 #include "TaxiCenter.h"
+
+
 #include "sockets/Udp.h"
 
 using namespace std;
 
 
 #include "sockets/Udp.h"
-
+#include <pthread.h>
 #include <iostream>
 #include <sys/socket.h>
 #include <stdio.h>
@@ -51,13 +53,18 @@ bool TaxiCenter::hasDriver(int id) {
 
 }
 void TaxiCenter::calculatePath(pthread_t* pathCreator, Driver* d) {
+    cout << "CALCULATING PATH..."<<endl;
     pthread_create(pathCreator, NULL, move, (void*)d);
+
+    //pthread_join(*pathCreator, NULL);
 }
 
 void* TaxiCenter::move(void* d) {
     Driver* driver = (Driver*)d;
     driver->drive();
+    cout <<" Finished Calculation"<<endl;
     pthread_exit(0);
+   //
 }
 
 
@@ -159,23 +166,6 @@ vector <Driver> TaxiCenter::getDrivers (){
     return drivers;
 }
 
-/*
-* alerts all drivers to move.
-*/
-/*Coordinate* TaxiCenter::driveAll() {
-    assignDrivers();
-    Trip t;
-    vector<Driver>::iterator currentDriver = drivers.begin();
-   // while(currentDriver != drivers.end()) {
-        (drivers).at(0).setMap(map);
-        map->getNodes();
-         t = drivers.at(0).drive();
-      //  currentDriver++;
-    //}
-    Point p = t.getStart();
-    Coordinate* c = &p;
-    return c;
-}*/
 
 /*
  * adds taxi to vector of taxis

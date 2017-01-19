@@ -4,15 +4,8 @@
 * flow of input/out, and serialization                      *
 ************************************************************/
 #include "Server.h"
-#include "StandardCab.h"
-#include "LuxuryCab.h"
-
-#include "BFS.h"
-#include "City.h"
-#include "TaxiCenter.h"
 //#include <boost/lexical_cast.hpp>
 //#include <boost/tokenizer.hpp>
-#include "Server.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -27,13 +20,12 @@
 #include <boost/iostreams/stream.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
-#include "sockets/Tcp.h"
-#include "waitingPoint.h"
 
 using namespace std;
 static void* assist(void* s);
 static void* acceptClients(void* v);
-pthread_mutex_t mutex1;
+pthread_mutex_t lockUpdate, lock9;
+
 bool commandCompleted;
 int threadCommand; //global variable for sub threads to check to know next action
 City city;
@@ -46,6 +38,7 @@ Socket* tcp;
 int rank;
 int allClientsAssisted;
 int numOfClients;
+int threadsExited;
 vector<waitingPoint> landmarks;
 void* createMainSocket(string port);
 
@@ -73,7 +66,9 @@ int main(int argc, char* argv[]) {
     //tcp->initialize();
     pthread_t mainRun;
     pthread_create(&mainRun, NULL, acceptClients, (void*)1);
-    pthread_join(mainRun,(void**)1);
+    pthread_join(mainRun,NULL);
+
+    //delete tcp;
 
 /*
 
@@ -108,7 +103,7 @@ void* createMainSocket(void* port) {
     //tcp->initialize();
     pthread_t mainRun;
     pthread_create(&mainRun, NULL, acceptClients, NULL);
-    //pthread_join(mainRun,(void**)1);
+    pthread_join(mainRun,(void**)1);
 
 
 }
@@ -122,7 +117,6 @@ void* createMainSocket(void* port) {
    * flow of the input and client/server interactions                  *
    ********************************************************************/
 static void* acceptClients(void* dummy) {
-    cout << "** ACCEPT CLIENTS **"<< endl;
     //Server* server = (Server*)s;
     bool run = true;
     char action1;
@@ -131,7 +125,6 @@ static void* acceptClients(void* dummy) {
 
 //Actions the user can perform
     while (run) {
-        cout << "** IN WHILE OF ACCEPT CLIENTS **"<<endl;
         commandCompleted = false;
         cin >> action1;
         int action = (int)action1 - 48;
@@ -146,13 +139,15 @@ static void* acceptClients(void* dummy) {
                 int clientSockets = tcp->initialize(num);
                 int i;
                 for(i = 0; i < numOfClients; i++) {
-                    cout<< "** IN LOOP TO CREATE THREADS ** "<<endl;
-                    pthread_t* thread = new pthread_t();
+                    pthread_t* thread =  new pthread_t();
                     Server* tempServer = new Server();
                     tempServer->setRank(i);
+                    //pthread_mutex_lock(&lockRec);
                     int socket = tcp->acceptClient();
+                    //pthread_mutex_unlock(&lockRec);
                     tempServer->setSocket(socket);
                     pthread_create(thread, NULL, assist, (void*)tempServer);
+                   // pthread_join(*thread, NULL);
                 }
                 break;
             }
@@ -199,11 +194,15 @@ static void* acceptClients(void* dummy) {
         //}
        // commandCompleted = true;
     }
+    while(threadsExited < numOfClients) {
+        continue;
+    }
+    delete tcp;
+    delete g;
     pthread_exit(0);
 }
 
  void* assist(void* s) {
-     cout << "** ASSIST **"<<endl;
      bool run = true;
     Server* server = (Server*)s;
     int missionTime = -1;
@@ -227,38 +226,36 @@ static void* acceptClients(void* dummy) {
                     }
                     break;
                 case 9:
+                    pthread_mutex_lock(&lock9);
+
                     if(missionTime != timeClock.getTime()) {
-                        cout << "TIME: "<<timeClock.getTime() << endl;
-                        cout << "SOCKET: "<<server->socketNum()<<endl;
                         server->SendTripToClient();
                         server->sendNextLocation();
                         missionTime = timeClock.getTime();
                     }
+                    pthread_mutex_unlock(&lock9);
+
                     break;
                 case 7:
-                    run = false;
+                    //run = false;
                     server->sendCommand(7);
                 default:
                     break;
             }
             server->assisted = true;
-            allClientsAssisted += 1;
-            if(allClientsAssisted == numOfClients) {
+        pthread_mutex_lock(&lockUpdate);
+        allClientsAssisted += 1;
+        pthread_mutex_unlock(&lockUpdate);
+
+        if(allClientsAssisted == numOfClients) {
                 allClientsAssisted = 0;
             }
            // while(!commandCompleted) {
              // sdf  continue;
             //}
         }
-    }
-//}
+ }
 
-//void* Server::runThread(void* c) {
-    //clientDetails* client = (clientDetails*)c;
-    //Server s = Server();
-   // assistClient(*client);
-   // pthread_exit(0);
-//}
 
 Server::Server() {
     timeClock = Clock();
@@ -341,7 +338,7 @@ void Server::SendTripToClient() {
         //if (myDriver->getDriverId()==waitingDrivers[0].getDriverId())
         //gets trip that starts at current time
 
-        //pthread_mutex_lock(&mutex1);
+        pthread_mutex_lock(&lockUpdate);
         //Check if this driver is next
         trip = tc.getNextTrip(timeClock.getTime());
         int i = 0;
@@ -365,16 +362,16 @@ void Server::SendTripToClient() {
             oa << trip1;
             s.flush();
             //Notifies client that they are going to receive a trip now
-            cout << "BEFORE SENDING TRIP COMMAND" << endl;
+            //pthread_mutex_lock(&lockSend);
             Server::sendCommand(2);
-            cout << "BEFORE SENDING TRIP" << endl;
             tcp->sendData(serializedTrip, clientSocket);
+            //pthread_mutex_unlock(&lockSend);
             verifyResponse();
-            cout << "AFTER SENDING TRIP" << endl;
+            //cout << "AFTER SENDING TRIP" << endl;
         }else {
             tc.addTrip(trip);
         }
-        pthread_mutex_unlock(&mutex1);
+        pthread_mutex_unlock(&lockUpdate);
 
     }
 }
@@ -402,7 +399,9 @@ string Server::createString(char* buffer, int bufferSize) {
 void Server::receiveDriver() {
     // RECEIVE DRIVER FROM CLIENT
     char buffer[1024];
+    //pthread_mutex_lock(&lockRec);
     tcp->reciveData(buffer, sizeof(buffer), clientSocket);
+    //pthread_mutex_unlock(&lockRec);
 
     // DESERIALIZE BUFFER INTO DRIVER
     string s = createString(buffer, sizeof(buffer));
@@ -414,9 +413,10 @@ void Server::receiveDriver() {
     //adds received driver to temp vector of drivers, until it is assigned a trip
     //waitingDrivers.push_back(*receivedDriver);
     myDriver = receivedDriver;
+    pthread_mutex_lock(&lockUpdate);
     waitingDrivers.push_back(*myDriver);
+    pthread_mutex_unlock(&lockUpdate);
 
-    cout << "@@@@@@SOCKET: " << clientSocket << "RECEIVED DRIVER: "<< myDriver->getDriverId() << endl;
     //delete receivedDriver;
 }
 
@@ -437,7 +437,19 @@ void Server::sendCommand(int command) {
     boost::archive::binary_oarchive oa(s1);
     oa << command;
     s1.flush();
+    //pthread_mutex_lock(&lockSend);
     tcp->sendData(commandString, clientSocket);
+    //pthread_mutex_unlock(&lockSend);
+
+    //cout << "sent verification to " << clientSocket <<endl;
+    if(command == 7) {
+        pthread_mutex_lock(&lockUpdate);
+        threadsExited += 1;
+        pthread_mutex_unlock(&lockUpdate);
+
+        //cout << "** THREADS EXITED: "<< threadsExited<<endl;
+        pthread_exit(0);
+    }
     verifyResponse();
 }
 
@@ -449,14 +461,17 @@ void Server::sendCommand(int command) {
      * serializes the point and sends it to client                         *
 	***********************************************************************/
 void Server::sendNextLocation() {
-    cout << "IN SEND NEXT LOCATION" <<endl;
     int x = 0;
     int y = 0;
-    cout << "SOCKET: "<<clientSocket<<"TRIP TIME: "<< myDriver->getTrip()->getTripTime()<<endl;
     if(myDriver->hasTrip()) {
+       // cout << "next location in "<< clientSocket<<endl;
         if (myDriver->getTrip()->getTripTime() < timeClock.getTime()) {
-            cout << "IN IF OF SEND NEXT LOCATION" << endl;
+         //   cout << "in IF of send location in socket: "<< clientSocket<<endl;
             pthread_join(calc, NULL);
+            while(myDriver->getTrip()->getSizeOfPath() == 0) {
+                continue;
+            }
+            //cout << "PATH SIZE: "<<myDriver->getTrip()->getSizeOfPath();
             if (!tc.hasDriver(myDriver->getDriverId())) {
                 tc.addDriver(*myDriver);
             }
@@ -470,16 +485,18 @@ void Server::sendNextLocation() {
             oa << ptrPoint;
             s1.flush();
             //notifies clients they are about to receive a new location
-            cout << "BEFORE SENDING NP COMMAND" << endl;
+           // pthread_mutex_lock(&lockSend);
             Server::sendCommand(9);
-            cout << "BEFORE SENDING NP" << endl;
             tcp->sendData(nextLocation, clientSocket);
+            //pthread_mutex_unlock(&lockSend);
             verifyResponse();
             delete ptrPoint;
             //need to assign driver a new trip
             if (myDriver->arrived()) {
+                pthread_mutex_lock(&lockUpdate);
                 waitingDrivers.push_back(*myDriver);
                 tc.deleteDriver(myDriver->getDriverId());
+                pthread_mutex_unlock(&lockUpdate);
                 myDriver->eraseTrip();
                 Server::SendTripToClient();
             }
@@ -518,7 +535,9 @@ void Server::assignVehicleToClient() {
     oa << taxiPointer;
     s1.flush();
     // RETURN TAXI TO CLIENT
+    //pthread_mutex_lock(&lockSend);
     tcp->sendData(serial_str, clientSocket);
+    //pthread_mutex_unlock(&lockSend);
     verifyResponse();
     //once taxi has been assigned to a driver, it can be deleted from vehicle vector
     vehicles.erase(vehicles.begin() + counter);
@@ -527,14 +546,16 @@ void Server::assignVehicleToClient() {
 
 void Server::verifyResponse() {
     char buffer[1024];
+    //pthread_mutex_lock(&lockRec);
     int ygjygv = tcp->reciveData(buffer, sizeof(buffer), clientSocket);
+    //pthread_mutex_unlock(&lockRec);
     string commandString = createString(buffer, sizeof(buffer));
-    int command = 0;
+    /*int command = 0;
     boost::iostreams::basic_array_source<char> device2(commandString.c_str(), commandString.size());
     boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s4(device2);
     boost::archive::binary_iarchive ia2(s4);
-    ia2 >> command;
-    cout << "RECEIVED RESPONSE in SOCKET: "<< clientSocket <<endl;
+    ia2 >> command;*/
+    //cout << "received verification in " << clientSocket <<endl;
 }
 
 void Server::setRank(int r) {

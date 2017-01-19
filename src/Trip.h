@@ -3,6 +3,7 @@
 
 #include "Point.h"
 #include <boost/serialization/access.hpp>
+#include <vector>
 class Trip {
     friend class boost::serialization::access;
 
@@ -55,7 +56,7 @@ public:
     int getEndY();
     void setPath(vector<Coordinate*> p);
     Point* getNextInPath();
-
+    int getSizeOfPath();
 };
 
 

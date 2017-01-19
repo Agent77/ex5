@@ -31,6 +31,7 @@ public:
     Point(Coordinate* cor);
     int getY();
     bool equal(Coordinate* c);
+    Coordinate* getMyLocation();
 
 };
 #endif //EXONE_POINT_H

@@ -21,7 +21,8 @@ Node::Node(Node* n) {
  * info and sets the visited member to false.
  */
 Node::Node(Coordinate *p) {
-    myLocation = p->getMyLocation();
+    Point* point = (Point*)p;
+    myLocation = point->getMyLocation();
     visited = false;
     obstacle = false;
 }

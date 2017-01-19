@@ -14,15 +14,6 @@ Driver::Driver() {
     //this->myTrip = NULL;
 }
 
-/*Driver::Driver(int driverId, int age, char mStatus, int exp, int vehicleId, Graph* map) {
-    numberOfcustomers=0;
-    this->driverId=driverId;
-    this->age=age;
-    this->maritalStatus=mStatus;
-    this->vehicleId=vehicleId;
-    this->exp = exp;
-    this->gps = map;
-}*/
 
 Driver::Driver(int driverId, int age, char mStatus, int exp, int vehicleId) {
     this->driverId=driverId;
@@ -82,10 +73,6 @@ Taxi Driver::getTaxi() {
 Trip* Driver::getTrip() {
     return &myTrip;
 }
-
-/*vector<Passenger> Driver::getPassengers() {
-    return myPassengers;
-}*/
 
 char Driver::getMaritalStatus() {
     return maritalStatus;

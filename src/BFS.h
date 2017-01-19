@@ -6,7 +6,6 @@
 #define GTESTEX3_BFS_H
 #include <queue>
 #include "Grid.h"
-#include "Coordinate.h"
 #include "Searchable.h"
 #include <boost/serialization/access.hpp>
 

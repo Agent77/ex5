@@ -49,6 +49,7 @@ public:
 	* The Function operation: creating new Socket object			       *
 	***********************************************************************/
 	Socket();
+	Socket(bool b, int f);
 	/***********************************************************************
 	* function name: ~Socket											   *
 	* The Input: none													   *
@@ -80,7 +81,6 @@ public:
 	* the data															   *
 	***********************************************************************/
 	virtual int reciveData(char* buffer, int size, int port) = 0;
-	//virtual int getPortNum() = 0;
 	virtual void setIP(string ip) = 0;
     virtual void setSocket(int socket) = 0;
 	virtual int acceptClient() = 0;

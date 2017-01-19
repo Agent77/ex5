@@ -2,7 +2,6 @@
 #include "Driver.h"
 #include "DriverClient.h"
 #include "LuxuryCab.h"
-#include "sockets/Tcp.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -52,7 +51,6 @@ DriverClient::DriverClient() {
 	***********************************************************************/
 void DriverClient::receiveTrip() {
     char buffer[1024];
-    cout<<"BEFORE GET TRIP"<<endl;
     // RECEIVE TRIP FROM SERVER
     client->reciveData(buffer, sizeof(buffer) ,0);
     string tripString = createString(buffer, sizeof(buffer));
@@ -64,8 +62,6 @@ void DriverClient::receiveTrip() {
 
     // GIVE DRIVER THE TRIP
     driver.setTrip(*trip);
-    cout<<"AFTER GET TRIP"<<endl;
-    cout<<"DRIVER'S TRIP: "<<driver.getTrip()->getId()<<endl;
     delete trip;
 }
 
@@ -85,7 +81,6 @@ int DriverClient::receiveCommand() {
     int command = 0;
     while(command!=7) {
         sendVerification();
-        cout << "after send verification"<<endl;
         //RECEIVE COMMAND
         client->reciveData(buffer, sizeof(buffer), 0);
 
@@ -94,10 +89,9 @@ int DriverClient::receiveCommand() {
         boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s4(device2);
         boost::archive::binary_iarchive ia2(s4);
         ia2 >> command;
-        cout << "Command Received By Client: "<< command <<endl;
+       // cout << "Command Received By Client: "<< command <<endl;
 
         sendVerification();
-        cout << "after send verification"<<endl;
 
         if (command == newPoint) {
             DriverClient::receiveNextPoint();
@@ -132,7 +126,6 @@ void DriverClient::receiveNextPoint() {
     char buffer[1024];
     Trip newTrip;
     //RECEIVE POINT
-    cout<<"BEFORE GETTING NP"<<endl;
     client->reciveData(buffer, sizeof(buffer),0);
     Point* p;
     string nextLocation = createString(buffer, sizeof(buffer));
@@ -185,11 +178,9 @@ void DriverClient::openSocket(Driver *driverSent, string currentIp, string port)
      * assigns it to its driver                                            *
 	***********************************************************************/
 void DriverClient::receiveVehicle() {
-    cout << "** IN RECEIVE VEHICLE **"<<endl;
     char buffer[1024];
     // GETS TAXI IN RETURN
     int resultData = client->reciveData(buffer, sizeof(buffer),0);
-    cout << "AFTER RECEIVE DATA IN RECEIVE VEHICLE" << endl;
     // DESERIALIZATION
     string taxiString = createString(buffer, sizeof(buffer));
     Taxi *taxi;
@@ -198,7 +189,6 @@ void DriverClient::receiveVehicle() {
     boost::archive::binary_iarchive ia(s2);
     ia >> taxi;
     //GIVE DRIVER TAXI
-    cout << "RECEIVED TAXI ID: "<< taxi->getId() << endl;
 
     driver.setTaxi(*taxi);
     delete taxi;
@@ -221,6 +211,7 @@ string DriverClient::createString(char* buffer, int bufferSize) {
 }
 
 void DriverClient::sendVerification() {
+    //cout << "** before send verification ** "<<endl;
     int verification = 77;
     // SERIALIZATION OF COMMAND
     std::string verify;
@@ -230,4 +221,6 @@ void DriverClient::sendVerification() {
     oa << verification;
     s1.flush();
     client->sendData(verify, 0);
+    cout << "** sent verification ** "<<endl;
+
 }

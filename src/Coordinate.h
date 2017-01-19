@@ -39,7 +39,7 @@ public:
     friend std:: ostream& operator<<(std :: ostream& out, Coordinate& t);
     virtual void printFormat(ostream& o) =0;
     virtual bool equalTo(Coordinate* c){};
-    virtual Coordinate* getMyLocation();
+    virtual Coordinate* getMyLocation() = 0;
     virtual bool equal(Coordinate *)=0;
 protected:
     int locs[2];

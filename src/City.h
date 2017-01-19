@@ -6,7 +6,6 @@
 #define EX2_CITY_H
 #include "TaxiCenter.h"
 #include "Passenger.h"
-#include "BFS.h"
 #include <boost/serialization/access.hpp>
 
 /*

@@ -1,5 +1,4 @@
 #include "Coordinate.h"
-#include "Point.h"
 
 /*
  * allows any function to request an objects location,
@@ -35,12 +34,4 @@ std:: ostream& operator<<(std :: ostream& out, Coordinate& t) {
  */
 int* Coordinate::getCoordinates() {
     return locs;
-}
-
-/*
- * The function returns current location of a coordinate
- */
-Coordinate* Coordinate::getMyLocation() {
-    Point* p = new Point(locs[0], locs[1]);
-    return p;
 }

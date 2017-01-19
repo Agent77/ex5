@@ -6,7 +6,10 @@
 #define EX2_TAXICENTER_H
 
 #include "Trip.h"
+#include "StandardCab.h"
+#include "LuxuryCab.h"
 #include "Driver.h"
+#include "Point.h"
 #include <vector>
 #include <boost/serialization/access.hpp>
 

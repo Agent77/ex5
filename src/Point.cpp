@@ -74,4 +74,8 @@ bool Point::equal(Coordinate *cor) {
     return false;
 }
 
+Coordinate* Point::getMyLocation() {
+    Coordinate* p = new Point(locs[0], locs[1]);
+    return p;
+}
 BOOST_CLASS_EXPORT(Point);

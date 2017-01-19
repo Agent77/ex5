@@ -7,16 +7,16 @@
 #define TCP_H_
 
 #include "Socket.h"
-#include "../clientDetails.h"
 
 
 
 class Tcp: public Socket {
 private:
-    vector<pthread_t*> threads;
+    //vector<pthread_t*> threads;
     int descriptorCommunicateClient;
 
 public:
+    Tcp(){};
     /***********************************************************************
     * function name: Tcp												   *
     * The Input: Boolean, true - if server, false if client and port number*
@@ -56,8 +56,6 @@ public:
     ***********************************************************************/
     int reciveData(char* buffer, int size, int port);
     void setIP(string ip);
-    static void* runThread(void* client);
-    void exitThreads();
     void setSocket(int socket) {
         descriptorCommunicateClient = socket;
     };

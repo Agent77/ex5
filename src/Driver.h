@@ -4,9 +4,8 @@
 #include <vector>
 #include <boost/serialization/access.hpp>
 #include "Trip.h"
-#include "Passenger.h"
+//#include "Passenger.h"
 #include "Taxi.h"
-#include "BFS.h"
 /*
  * Driver class represents a driver. It holds the driver fields and
  * in charge of moving on the graph.
@@ -42,7 +41,6 @@ private:
 public:
     Driver();
     ~Driver();
-    //Driver(int driverId, int age, char mStatus, int exp, int vehicleId, Graph* gps);
     Driver(int driverId, int age, char mStatus, int exp, int vehicleId);
     int getAge();
     int getVehicleId();
@@ -54,12 +52,10 @@ public:
     double getSatisfaction();
     Taxi getTaxi();
     Trip* getTrip();
-    vector <Passenger> getPassengers();
     char getMaritalStatus();
     void setTaxi(Taxi t);
     void setTrip(Trip t);
     void rateMe(int rating);
-    void addPassenger(Passenger p);
     void drive();
     bool arrived();
     void setMap(Graph* map);

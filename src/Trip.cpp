@@ -111,3 +111,7 @@ Point* Trip::getNextInPath() {
     path.erase(path.begin());
     return p;
 }
+
+int Trip::getSizeOfPath() {
+    return path.size();
+}

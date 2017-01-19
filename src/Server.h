@@ -7,14 +7,16 @@
 #include <boost/archive/archive_exception.hpp>
 #include <boost/serialization/access.hpp>
 #include "City.h"
-#include "Driver.h"
-#include "Trip.h"
 #include "Graph.h"
-
-#include "TaxiCenter.h"
-#include "../src/sockets/Socket.h"
+#include "BFS.h"
+#include "sockets/Tcp.h"
 #include "Clock.h"
-#include "clientDetails.h"
+#include "waitingPoint.h"
+
+//#include <boost/lexical_cast.hpp>
+//#include <boost/tokenizer.hpp>
+
+
 
 using namespace std;
 using namespace boost::archive;
@@ -43,7 +45,7 @@ public:
 	* The Function operation: contains switch case which runs the main
     * flow of the input and client/server interactions                     *
 	***********************************************************************/
-    static void* run(void* v);
+    //static void* run(void* v);
     /***********************************************************************
 	* function name: initialize											   *
 	* The Input: none													   *
@@ -67,7 +69,7 @@ public:
 	* The output: none										               *
 	* The Function operation: opens a socket for the client to reach	   *
 	***********************************************************************/
-    int createClients(string port);
+   // int createClients(string port);
     /***********************************************************************
 	* function name: assignVehicleToClient												   *
 	* The Input: none													   *
@@ -120,9 +122,9 @@ public:
     };
     int socketNum() {
     return clientSocket;}
-    void assistClient(clientDetails c);
-    static void* assist(void* s);
-    void assignTrip(Trip t);
+    //void assistClient(clientDetails c);
+    //static void* assist(void* s);
+    //void assignTrip(Trip t);
     void verifyResponse();
     void setRank(int rank);
 
