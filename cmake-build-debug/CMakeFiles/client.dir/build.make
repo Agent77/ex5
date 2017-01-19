@@ -273,9 +273,33 @@ CMakeFiles/client.dir/src/Graph.cpp.o.provides: CMakeFiles/client.dir/src/Graph.
 CMakeFiles/client.dir/src/Graph.cpp.o.provides.build: CMakeFiles/client.dir/src/Graph.cpp.o
 
 
+CMakeFiles/client.dir/src/waitingPoint.cpp.o: CMakeFiles/client.dir/flags.make
+CMakeFiles/client.dir/src/waitingPoint.cpp.o: ../src/waitingPoint.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/client.dir/src/waitingPoint.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/client.dir/src/waitingPoint.cpp.o -c /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/waitingPoint.cpp
+
+CMakeFiles/client.dir/src/waitingPoint.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/client.dir/src/waitingPoint.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/waitingPoint.cpp > CMakeFiles/client.dir/src/waitingPoint.cpp.i
+
+CMakeFiles/client.dir/src/waitingPoint.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/client.dir/src/waitingPoint.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/waitingPoint.cpp -o CMakeFiles/client.dir/src/waitingPoint.cpp.s
+
+CMakeFiles/client.dir/src/waitingPoint.cpp.o.requires:
+
+.PHONY : CMakeFiles/client.dir/src/waitingPoint.cpp.o.requires
+
+CMakeFiles/client.dir/src/waitingPoint.cpp.o.provides: CMakeFiles/client.dir/src/waitingPoint.cpp.o.requires
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/waitingPoint.cpp.o.provides.build
+.PHONY : CMakeFiles/client.dir/src/waitingPoint.cpp.o.provides
+
+CMakeFiles/client.dir/src/waitingPoint.cpp.o.provides.build: CMakeFiles/client.dir/src/waitingPoint.cpp.o
+
+
 CMakeFiles/client.dir/src/Grid.cpp.o: CMakeFiles/client.dir/flags.make
 CMakeFiles/client.dir/src/Grid.cpp.o: ../src/Grid.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/client.dir/src/Grid.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/client.dir/src/Grid.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/client.dir/src/Grid.cpp.o -c /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Grid.cpp
 
 CMakeFiles/client.dir/src/Grid.cpp.i: cmake_force
@@ -299,7 +323,7 @@ CMakeFiles/client.dir/src/Grid.cpp.o.provides.build: CMakeFiles/client.dir/src/G
 
 CMakeFiles/client.dir/src/LuxuryCab.cpp.o: CMakeFiles/client.dir/flags.make
 CMakeFiles/client.dir/src/LuxuryCab.cpp.o: ../src/LuxuryCab.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/client.dir/src/LuxuryCab.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/client.dir/src/LuxuryCab.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/client.dir/src/LuxuryCab.cpp.o -c /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/LuxuryCab.cpp
 
 CMakeFiles/client.dir/src/LuxuryCab.cpp.i: cmake_force
@@ -323,7 +347,7 @@ CMakeFiles/client.dir/src/LuxuryCab.cpp.o.provides.build: CMakeFiles/client.dir/
 
 CMakeFiles/client.dir/src/Node.cpp.o: CMakeFiles/client.dir/flags.make
 CMakeFiles/client.dir/src/Node.cpp.o: ../src/Node.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/client.dir/src/Node.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/client.dir/src/Node.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/client.dir/src/Node.cpp.o -c /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Node.cpp
 
 CMakeFiles/client.dir/src/Node.cpp.i: cmake_force
@@ -347,7 +371,7 @@ CMakeFiles/client.dir/src/Node.cpp.o.provides.build: CMakeFiles/client.dir/src/N
 
 CMakeFiles/client.dir/src/Passenger.cpp.o: CMakeFiles/client.dir/flags.make
 CMakeFiles/client.dir/src/Passenger.cpp.o: ../src/Passenger.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/client.dir/src/Passenger.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/client.dir/src/Passenger.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/client.dir/src/Passenger.cpp.o -c /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Passenger.cpp
 
 CMakeFiles/client.dir/src/Passenger.cpp.i: cmake_force
@@ -371,7 +395,7 @@ CMakeFiles/client.dir/src/Passenger.cpp.o.provides.build: CMakeFiles/client.dir/
 
 CMakeFiles/client.dir/src/Point.cpp.o: CMakeFiles/client.dir/flags.make
 CMakeFiles/client.dir/src/Point.cpp.o: ../src/Point.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/client.dir/src/Point.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/client.dir/src/Point.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/client.dir/src/Point.cpp.o -c /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Point.cpp
 
 CMakeFiles/client.dir/src/Point.cpp.i: cmake_force
@@ -395,7 +419,7 @@ CMakeFiles/client.dir/src/Point.cpp.o.provides.build: CMakeFiles/client.dir/src/
 
 CMakeFiles/client.dir/src/StandardCab.cpp.o: CMakeFiles/client.dir/flags.make
 CMakeFiles/client.dir/src/StandardCab.cpp.o: ../src/StandardCab.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/client.dir/src/StandardCab.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/client.dir/src/StandardCab.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/client.dir/src/StandardCab.cpp.o -c /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/StandardCab.cpp
 
 CMakeFiles/client.dir/src/StandardCab.cpp.i: cmake_force
@@ -419,7 +443,7 @@ CMakeFiles/client.dir/src/StandardCab.cpp.o.provides.build: CMakeFiles/client.di
 
 CMakeFiles/client.dir/src/Taxi.cpp.o: CMakeFiles/client.dir/flags.make
 CMakeFiles/client.dir/src/Taxi.cpp.o: ../src/Taxi.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/client.dir/src/Taxi.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/client.dir/src/Taxi.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/client.dir/src/Taxi.cpp.o -c /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Taxi.cpp
 
 CMakeFiles/client.dir/src/Taxi.cpp.i: cmake_force
@@ -443,7 +467,7 @@ CMakeFiles/client.dir/src/Taxi.cpp.o.provides.build: CMakeFiles/client.dir/src/T
 
 CMakeFiles/client.dir/src/TaxiCenter.cpp.o: CMakeFiles/client.dir/flags.make
 CMakeFiles/client.dir/src/TaxiCenter.cpp.o: ../src/TaxiCenter.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/client.dir/src/TaxiCenter.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/client.dir/src/TaxiCenter.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/client.dir/src/TaxiCenter.cpp.o -c /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/TaxiCenter.cpp
 
 CMakeFiles/client.dir/src/TaxiCenter.cpp.i: cmake_force
@@ -467,7 +491,7 @@ CMakeFiles/client.dir/src/TaxiCenter.cpp.o.provides.build: CMakeFiles/client.dir
 
 CMakeFiles/client.dir/src/Trip.cpp.o: CMakeFiles/client.dir/flags.make
 CMakeFiles/client.dir/src/Trip.cpp.o: ../src/Trip.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/client.dir/src/Trip.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/client.dir/src/Trip.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/client.dir/src/Trip.cpp.o -c /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Trip.cpp
 
 CMakeFiles/client.dir/src/Trip.cpp.i: cmake_force
@@ -500,6 +524,7 @@ client_OBJECTS = \
 "CMakeFiles/client.dir/src/Clock.cpp.o" \
 "CMakeFiles/client.dir/src/Coordinate.cpp.o" \
 "CMakeFiles/client.dir/src/Graph.cpp.o" \
+"CMakeFiles/client.dir/src/waitingPoint.cpp.o" \
 "CMakeFiles/client.dir/src/Grid.cpp.o" \
 "CMakeFiles/client.dir/src/LuxuryCab.cpp.o" \
 "CMakeFiles/client.dir/src/Node.cpp.o" \
@@ -522,6 +547,7 @@ client: CMakeFiles/client.dir/src/City.cpp.o
 client: CMakeFiles/client.dir/src/Clock.cpp.o
 client: CMakeFiles/client.dir/src/Coordinate.cpp.o
 client: CMakeFiles/client.dir/src/Graph.cpp.o
+client: CMakeFiles/client.dir/src/waitingPoint.cpp.o
 client: CMakeFiles/client.dir/src/Grid.cpp.o
 client: CMakeFiles/client.dir/src/LuxuryCab.cpp.o
 client: CMakeFiles/client.dir/src/Node.cpp.o
@@ -537,7 +563,7 @@ client: /opt/local/lib/libboost_serialization-mt.dylib
 client: /opt/local/lib/libboost_system-mt.dylib
 client: libsockets.a
 client: CMakeFiles/client.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Linking CXX executable client"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Linking CXX executable client"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/client.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -554,6 +580,7 @@ CMakeFiles/client.dir/requires: CMakeFiles/client.dir/src/City.cpp.o.requires
 CMakeFiles/client.dir/requires: CMakeFiles/client.dir/src/Clock.cpp.o.requires
 CMakeFiles/client.dir/requires: CMakeFiles/client.dir/src/Coordinate.cpp.o.requires
 CMakeFiles/client.dir/requires: CMakeFiles/client.dir/src/Graph.cpp.o.requires
+CMakeFiles/client.dir/requires: CMakeFiles/client.dir/src/waitingPoint.cpp.o.requires
 CMakeFiles/client.dir/requires: CMakeFiles/client.dir/src/Grid.cpp.o.requires
 CMakeFiles/client.dir/requires: CMakeFiles/client.dir/src/LuxuryCab.cpp.o.requires
 CMakeFiles/client.dir/requires: CMakeFiles/client.dir/src/Node.cpp.o.requires

@@ -11,20 +11,12 @@ sstream
 -
 BFS.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/BFS.h
-boost/serialization/export.hpp
--
 
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/BFS.h
-Node.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Node.h
 queue
 -
-Graph.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Graph.h
 Grid.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Grid.h
-Coordinate.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Coordinate.h
 Searchable.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Searchable.h
 boost/serialization/access.hpp
@@ -35,20 +27,12 @@ sstream
 -
 City.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/City.h
-StandardCab.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/StandardCab.h
-LuxuryCab.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/LuxuryCab.h
-TaxiCenter.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/TaxiCenter.h
 
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/City.h
 TaxiCenter.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/TaxiCenter.h
 Passenger.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Passenger.h
-BFS.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/BFS.h
 boost/serialization/access.hpp
 -
 
@@ -63,8 +47,6 @@ boost/serialization/access.hpp
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Coordinate.cpp
 Coordinate.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Coordinate.h
-Point.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Point.h
 
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Coordinate.h
 boost/serialization/access.hpp
@@ -85,10 +67,6 @@ fstream
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Driver.cpp
 Driver.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Driver.h
-../src/sockets/Udp.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Udp.h
-../src/sockets/Udp.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Udp.h
 unistd.h
 -
 iostream
@@ -101,16 +79,12 @@ boost/serialization/access.hpp
 -
 Trip.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Trip.h
-Passenger.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Passenger.h
 Taxi.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Taxi.h
 
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/DriverClient.cpp
 sockets/Tcp.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Tcp.h
-sockets/Socket.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Socket.h
 Driver.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Driver.h
 DriverClient.h
@@ -201,16 +175,10 @@ boost/serialization/access.hpp
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Grid.cpp
 Grid.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Grid.h
-Node.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Node.h
 boost/serialization/export.hpp
 -
 
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Grid.h
-Node.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Node.h
-Point.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Point.h
 Graph.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Graph.h
 string.h
@@ -239,12 +207,8 @@ Node.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Node.h
 boost/serialization/access.hpp
 -
-Node.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Node.h
 Point.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Point.h
-Coordinate.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Coordinate.h
 
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Passenger.cpp
 Passenger.h
@@ -277,8 +241,6 @@ boost/serialization/access.hpp
 -
 queue
 -
-Node.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Node.h
 Graph.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Graph.h
 boost/serialization/access.hpp
@@ -319,12 +281,12 @@ boost/serialization/access.hpp
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/TaxiCenter.cpp
 TaxiCenter.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/TaxiCenter.h
-Driver.h
-/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Driver.h
 sockets/Udp.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Udp.h
 sockets/Udp.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Udp.h
+pthread.h
+-
 iostream
 -
 sys/socket.h
@@ -357,6 +319,10 @@ string.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/TaxiCenter.h
 Trip.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Trip.h
+StandardCab.h
+/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/StandardCab.h
+LuxuryCab.h
+/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/LuxuryCab.h
 Driver.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Driver.h
 Point.h
@@ -374,6 +340,8 @@ Trip.h
 Point.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Point.h
 boost/serialization/access.hpp
+-
+vector
 -
 
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Socket.cpp
@@ -407,6 +375,14 @@ Socket.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Udp.h
 Socket.h
 /Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Socket.h
+
+/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/waitingPoint.cpp
+waitingPoint.h
+/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/waitingPoint.h
+
+/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/waitingPoint.h
+Driver.h
+/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Driver.h
 
 /opt/local/include/boost/algorithm/string.hpp
 boost/algorithm/string/std_containers_traits.hpp

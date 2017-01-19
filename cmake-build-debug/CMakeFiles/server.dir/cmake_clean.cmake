@@ -8,6 +8,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/server.dir/src/Clock.cpp.o"
   "CMakeFiles/server.dir/src/Coordinate.cpp.o"
   "CMakeFiles/server.dir/src/Graph.cpp.o"
+  "CMakeFiles/server.dir/src/waitingPoint.cpp.o"
   "CMakeFiles/server.dir/src/Grid.cpp.o"
   "CMakeFiles/server.dir/src/LuxuryCab.cpp.o"
   "CMakeFiles/server.dir/src/Node.cpp.o"

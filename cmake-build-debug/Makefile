@@ -719,6 +719,36 @@ src/sockets/Tcp.cpp.s:
 	$(MAKE) -f CMakeFiles/sockets.dir/build.make CMakeFiles/sockets.dir/src/sockets/Tcp.cpp.s
 .PHONY : src/sockets/Tcp.cpp.s
 
+src/waitingPoint.o: src/waitingPoint.cpp.o
+
+.PHONY : src/waitingPoint.o
+
+# target to build an object file
+src/waitingPoint.cpp.o:
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/waitingPoint.cpp.o
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/waitingPoint.cpp.o
+.PHONY : src/waitingPoint.cpp.o
+
+src/waitingPoint.i: src/waitingPoint.cpp.i
+
+.PHONY : src/waitingPoint.i
+
+# target to preprocess a source file
+src/waitingPoint.cpp.i:
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/waitingPoint.cpp.i
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/waitingPoint.cpp.i
+.PHONY : src/waitingPoint.cpp.i
+
+src/waitingPoint.s: src/waitingPoint.cpp.s
+
+.PHONY : src/waitingPoint.s
+
+# target to generate assembly for a file
+src/waitingPoint.cpp.s:
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/waitingPoint.cpp.s
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/waitingPoint.cpp.s
+.PHONY : src/waitingPoint.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -787,6 +817,9 @@ help:
 	@echo "... src/sockets/Tcp.o"
 	@echo "... src/sockets/Tcp.i"
 	@echo "... src/sockets/Tcp.s"
+	@echo "... src/waitingPoint.o"
+	@echo "... src/waitingPoint.i"
+	@echo "... src/waitingPoint.s"
 .PHONY : help
 
 

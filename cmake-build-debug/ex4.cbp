@@ -328,6 +328,14 @@
 			<Option target="server"/>
 			<Option target="sockets"/>
 		</Unit>
+		<Unit filename="/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/waitingPoint.cpp">
+			<Option target="client"/>
+			<Option target="server"/>
+		</Unit>
+		<Unit filename="/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/waitingPoint.h">
+			<Option target="client"/>
+			<Option target="server"/>
+		</Unit>
 		<Unit filename="/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

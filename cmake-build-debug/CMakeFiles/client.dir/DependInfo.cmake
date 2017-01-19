@@ -22,6 +22,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/Trip.cpp" "/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles/client.dir/src/Trip.cpp.o"
   "/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Socket.cpp" "/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles/client.dir/src/sockets/Socket.cpp.o"
   "/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/sockets/Tcp.cpp" "/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles/client.dir/src/sockets/Tcp.cpp.o"
+  "/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/src/waitingPoint.cpp" "/Users/Tiki/ClionProjects/AdvancedProgramming/ex5/cmake-build-debug/CMakeFiles/client.dir/src/waitingPoint.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")
 
